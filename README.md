@@ -3,11 +3,11 @@
 Group Members: Khanh Bui, Keerthi Renduchintala, Sirena Akopyan
 
 ## Summary of  of research questions
-1. What are the 3 dominant factors that increase the likelihood of having a stroke?
+What are the 3 dominant factors that increase the likelihood of having a stroke?
 - We will investigate what factors have the highest occurrence of stroke
-2. Does having more than 1 risk factor impact how likely one is to have a stroke? ( Measure the rate)
+Does having more than 1 risk factor impact how likely one is to have a stroke? ( Measure the rate)
 - We will investigate how the percentage of strokes for the combinations of risk factors change
-3. Can we predict if someone is likely to have a stroke given the presence of certain risk factors? 
+Can we predict if someone is likely to have a stroke given the presence of certain risk factors? 
 - We will investigate if the presence of a risk factor can predict instances of stroke
 
 ## Motivation
