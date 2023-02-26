@@ -35,11 +35,34 @@ If your BMI is 30.0 or higher, it falls within the obesity range.
 # for now, convert BMI into categories
 # then determine if we can convert to binary
 cleaned_BMI = cleaned_smoking.copy()
-cleaned_BMI.loc[cleaned_BMI['bmi'] <= 18.4, 'BMI_cat'] = 'underweight'
-cleaned_BMI['BMI_cat'] = np.where((cleaned_BMI['bmi'] >= 18.5)
-                                  & (cleaned_BMI['bmi'] <= 24.9),
-                                  'healthy weight', cleaned_BMI['bmi'])
-cleaned_BMI['BMI_cat'] = np.where((cleaned_BMI['bmi'] >= 25)
-                                  & (cleaned_BMI['bmi'] <= 29.9),
-                                  'overweight', cleaned_BMI['bmi'])
-cleaned_BMI.loc[cleaned_BMI['bmi'] >= 30, 'BMI_cat'] = 'obese'
+cleaned_BMI['BMI_cat'] = np.where(cleaned_BMI['bmi'] < 18.5,
+                                  'underweight',
+                                  np.where((cleaned_BMI['bmi'] >= 18.5) & (cleaned_BMI['bmi'] <= 24.9),
+                                           'healthy weight',
+                                           np.where((cleaned_BMI['bmi'] >= 25) & (cleaned_BMI['bmi'] <= 29.9),
+                                                    'overweight',
+                                                    'obese')))
+
+
+#print(cleaned_BMI)
+
+# convert avg_glucose_level into binary
+# 99 or below is 0, 100+ is 1
+# source: cdc gov
+
+cleaned_glucose = cleaned_BMI.copy()
+cleaned_glucose['cleaned_avg_glucose'] = np.where((cleaned_glucose['avg_glucose_level'] <= 99),
+                                                  0, np.where((cleaned_glucose['avg_glucose_level'] >= 100),
+                                                              1, cleaned_glucose['avg_glucose_level'])).astype(int)
+
+#print(cleaned_glucose)
+
+# convert age into binary
+# less than 65 is 0
+# 65+ is 1
+
+cleaned_age = cleaned_glucose.copy()
+cleaned_age['cleaned_age'] = np.where((cleaned_age['age'] <= 64),
+                                              0, np.where((cleaned_age['age'] >= 65),
+                                                          1, cleaned_age['age'])).astype(int)
+print(cleaned_age)
