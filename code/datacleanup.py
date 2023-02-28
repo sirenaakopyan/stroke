@@ -35,8 +35,8 @@ If your BMI is 30.0 or higher, it falls within the obesity range.
 # for now, convert BMI into categories
 # then determine if we can convert to binary
 cleaned_BMI = cleaned_smoking.copy()
-cleaned_BMI['Low_BMI'] = np.where(cleaned_BMI['bmi'] < 18.5, 1, 0)
-cleaned_BMI['High_BMI'] = np.where((cleaned_BMI['bmi'] >= 18.5) & (
+cleaned_BMI['low_BMI'] = np.where(cleaned_BMI['bmi'] < 18.5, 1, 0)
+cleaned_BMI['high_BMI'] = np.where((cleaned_BMI['bmi'] >= 18.5) & (
     cleaned_BMI['bmi'] <= 24.9), 0, np.where((cleaned_BMI['bmi'] >= 25)
                                              & (cleaned_BMI['bmi'] <= 29.9), 1, 0))
 
@@ -48,7 +48,7 @@ cleaned_BMI['High_BMI'] = np.where((cleaned_BMI['bmi'] >= 18.5) & (
 # source: cdc gov
 
 cleaned_glucose = cleaned_BMI.copy()
-cleaned_glucose['cleaned_avg_glucose'] = np.where((cleaned_glucose['avg_glucose_level'] <= 99),
+cleaned_glucose['high_glucose'] = np.where((cleaned_glucose['avg_glucose_level'] <= 99),
                                                   0, np.where((cleaned_glucose['avg_glucose_level'] >= 100),
                                                               1, cleaned_glucose['avg_glucose_level'])).astype(int)
 
@@ -59,17 +59,17 @@ cleaned_glucose['cleaned_avg_glucose'] = np.where((cleaned_glucose['avg_glucose_
 # 65+ is 1
 
 cleaned_age = cleaned_glucose.copy()
-cleaned_age['cleaned_age'] = np.where((cleaned_age['age'] <= 64),
+cleaned_age['over_65'] = np.where((cleaned_age['age'] <= 64),
                                               0, np.where((cleaned_age['age'] >= 65),
                                                           1, cleaned_age['age'])).astype(int)
 print(cleaned_age)
 print(cleaned_age.columns)
-final_df = cleaned_age[['id', 'hypertension', 'heart_disease', 'cleaned_avg_glucose', 'Low_BMI',
-                        'High_BMI','gender', 'cleaned_age', 'ever_married', 'work_type',
+final_df = cleaned_age[['id', 'hypertension', 'heart_disease', 'high_glucose', 'low_BMI',
+                        'high_BMI','gender', 'over_65', 'ever_married', 'work_type',
                         'Residence_type', 'smoking_status', 'stroke']]
 print (final_df)
 # Calculate the correlation matrix
-corr_matrix = cleaned_age.corr()
+corr_matrix = final_df.corr()
 
 # Extract the correlation coefficients for stroke
 stroke_corr = corr_matrix["stroke"]
