@@ -63,7 +63,11 @@ cleaned_age['cleaned_age'] = np.where((cleaned_age['age'] <= 64),
                                               0, np.where((cleaned_age['age'] >= 65),
                                                           1, cleaned_age['age'])).astype(int)
 print(cleaned_age)
-
+print(cleaned_age.columns)
+final_df = cleaned_age[['id', 'hypertension', 'heart_disease', 'cleaned_avg_glucose', 'Low_BMI',
+                        'High_BMI','gender', 'cleaned_age', 'ever_married', 'work_type',
+                        'Residence_type', 'smoking_status', 'stroke']]
+print (final_df)
 # Calculate the correlation matrix
 corr_matrix = cleaned_age.corr()
 
