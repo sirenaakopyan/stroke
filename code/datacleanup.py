@@ -66,3 +66,26 @@ cleaned_age['cleaned_age'] = np.where((cleaned_age['age'] <= 64),
                                               0, np.where((cleaned_age['age'] >= 65),
                                                           1, cleaned_age['age'])).astype(int)
 print(cleaned_age)
+
+# Calculate the correlation matrix
+corr_matrix = cleaned_age.corr()
+
+# Extract the correlation coefficients for stroke
+stroke_corr = corr_matrix["stroke"]
+
+# Sort the correlation coefficients in descending order
+stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
+
+# Print the sorted correlation coefficients
+print(stroke_corr_sorted)
+
+# result
+# cleaned_age            0.247136
+# age                    0.245257
+# heart_disease          0.134914
+# avg_glucose_level      0.131945
+# hypertension           0.127904
+# bmi                    0.042374
+# cleaned_avg_glucose    0.012812
+
+# => highest correlate factor is age & second is heart_disease
