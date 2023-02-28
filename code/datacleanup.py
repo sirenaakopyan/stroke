@@ -35,13 +35,10 @@ If your BMI is 30.0 or higher, it falls within the obesity range.
 # for now, convert BMI into categories
 # then determine if we can convert to binary
 cleaned_BMI = cleaned_smoking.copy()
-cleaned_BMI['BMI_cat'] = np.where(cleaned_BMI['bmi'] < 18.5,
-                                  'underweight',
-                                  np.where((cleaned_BMI['bmi'] >= 18.5) & (cleaned_BMI['bmi'] <= 24.9),
-                                           'healthy weight',
-                                           np.where((cleaned_BMI['bmi'] >= 25) & (cleaned_BMI['bmi'] <= 29.9),
-                                                    'overweight',
-                                                    'obese')))
+cleaned_BMI['Low_BMI'] = np.where(cleaned_BMI['bmi'] < 18.5, 1, 0)
+cleaned_BMI['High_BMI'] = np.where((cleaned_BMI['bmi'] >= 18.5) & (
+    cleaned_BMI['bmi'] <= 24.9), 0, np.where((cleaned_BMI['bmi'] >= 25)
+                                             & (cleaned_BMI['bmi'] <= 29.9), 1, 0))
 
 
 #print(cleaned_BMI)
