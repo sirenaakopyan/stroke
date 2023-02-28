@@ -107,9 +107,10 @@ print(stroke_corr_sorted)
 # over_65          0.247136
 # heart_disease    0.134914
 # hypertension     0.127904
+# married          0.108340
 # low_BMI          0.056477
+# residence        0.015458
 # high_BMI         0.012900
 # high_glucose     0.012812
-# id               0.006388
 
 # => highest correlate factor is age & second is heart_disease
