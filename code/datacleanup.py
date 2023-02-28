@@ -62,11 +62,33 @@ cleaned_age = cleaned_glucose.copy()
 cleaned_age['over_65'] = np.where((cleaned_age['age'] <= 64),
                                               0, np.where((cleaned_age['age'] >= 65),
                                                           1, cleaned_age['age'])).astype(int)
-print(cleaned_age)
-print(cleaned_age.columns)
-final_df = cleaned_age[['id', 'hypertension', 'heart_disease', 'high_glucose', 'low_BMI',
-                        'high_BMI','gender', 'over_65', 'ever_married', 'work_type',
-                        'Residence_type', 'smoking_status', 'stroke']]
+# print(cleaned_age)
+# print(cleaned_age.columns)
+
+# converting residence_type to binary
+# 1 for urban
+# 0 for rural
+cleaned_residence = cleaned_age.copy()
+cleaned_residence.loc[cleaned_residence["Residence_type"]
+                      == "Urban", "residence"] = 1
+cleaned_residence.loc[cleaned_residence["Residence_type"]
+                      == "Rural", "residence"] = 0
+# print(cleaned_residence)
+
+# converting ever_married to binary
+# 1 for married
+# 0 for not married
+cleaned_married = cleaned_residence.copy()
+cleaned_married.loc[cleaned_married["ever_married"]
+                      == "Yes", "married"] = 1
+cleaned_married.loc[cleaned_married["ever_married"]
+                      == "No", "married"] = 0
+# print(cleaned_married.columns)
+
+
+final_df = cleaned_married[['hypertension', 'heart_disease', 'high_glucose', 'low_BMI',
+                        'high_BMI','gender', 'over_65', 'married', 'work_type',
+                        'residence', 'smoking_status', 'stroke']]
 print (final_df)
 # Calculate the correlation matrix
 corr_matrix = final_df.corr()
@@ -81,12 +103,13 @@ stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
 print(stroke_corr_sorted)
 
 # result
-# cleaned_age            0.247136
-# age                    0.245257
-# heart_disease          0.134914
-# avg_glucose_level      0.131945
-# hypertension           0.127904
-# bmi                    0.042374
-# cleaned_avg_glucose    0.012812
+# stroke           1.000000
+# over_65          0.247136
+# heart_disease    0.134914
+# hypertension     0.127904
+# low_BMI          0.056477
+# high_BMI         0.012900
+# high_glucose     0.012812
+# id               0.006388
 
 # => highest correlate factor is age & second is heart_disease
