@@ -138,10 +138,26 @@ Plotly bubble map to layer map of strokes over map of each health risk factor
 '''
 # create shapefile for geometry and state name 
 us_shapefile = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-us_shapefile = shapefile[["NAME", "geometry"]]
-print (us_shapefile)
+us_shapefile = us_shapefile[["NAME", "geometry"]]
+# print (us_shapefile)
 
 # hypertension by state
-hypertension_stata = pd.read_csv("")
+hypertension_state = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
+# print (hypertension_state)
+
+# Obesity (high-BMI by state)
+obesity_state = pd.read_csv("datasets/Obesity_by_state.csv")
+obesity_state = obesity_state [["State", "Prevalence"]]
+# print (obesity_state)
+
+# high-glucose (Diabetes by state)
+raw_diabetes_state = pd.read_csv("datasets/Diabetes_by_state.csv")
+state_abbr = pd.read_csv("datasets/State_code_to_name.csv")
+state_abbr = state_abbr[["code", "state"]]
+print(state_abbr)
+raw_diabetes_state = raw_diabetes_state.groupby('state_abbr').mean()
+diabetes_state = state_abbr.merge(raw_diabetes_state, left_on='state_abbr',
+                                   right_on='code', how='outer')
+print (diabetes_state)
 
 
