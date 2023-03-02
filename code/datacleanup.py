@@ -5,6 +5,7 @@ factors for stroke.
 '''
 import pandas as pd
 import numpy as np
+import geopandas as gpd
 
 # Question 1: What does the data indicate are the risk factors
 unclean_data = pd.read_csv('datasets/stroke_data_1.csv')
@@ -128,9 +129,17 @@ Find datasets
 on heart disease, geography,state, and population size
 on hypertension, geography, state, and population size
 high BMI, geography,state, and population size
-on High glucose, geography,statem and population size
+on High glucose, geography,state and population size
 Combine on state
 Find dataset
 on map of strokes
 Plotly bubble map to layer map of strokes over map of each health risk factor
 '''
+# create shapefile for geometry and state name 
+us_shapefile = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
+us_shapefile = shapefile[["NAME", "geometry"]]
+print (us_shapefile)
+
+# shapefile for heart disease by state
+
+
