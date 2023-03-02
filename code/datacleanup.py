@@ -125,11 +125,12 @@ print(stroke_corr_sorted)
 '''
 Question 2:
 
+Since we see Heart Disease has highest correlation with stroke
+map different heart disease/stroke risk factors
 Find datasets 
-on heart disease, geography,state, and population size
 on hypertension, geography, state, and population size
-high BMI, geography,state, and population size
-on High glucose, geography,state and population size
+high BMI (obesity), geography,state, and population size
+on High glucose (diabetes), geography,state and population size
 Combine on state
 Find dataset
 on map of strokes
@@ -140,6 +141,7 @@ us_shapefile = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
 us_shapefile = shapefile[["NAME", "geometry"]]
 print (us_shapefile)
 
-# shapefile for heart disease by state
+# hypertension by state
+hypertension_stata = pd.read_csv("")
 
 
