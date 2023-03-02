@@ -6,6 +6,7 @@ factors for stroke.
 import pandas as pd
 import numpy as np
 
+# Question 1: What does the data indicate are the risk factors
 unclean_data = pd.read_csv('datasets/stroke_data_1.csv')
 
 '''
@@ -85,6 +86,8 @@ cleaned_married.loc[cleaned_married["ever_married"]
                       == "No", "married"] = 0
 # print(cleaned_married.columns)
 
+# converting work type to binary
+
 
 final_df = cleaned_married[['hypertension', 'heart_disease', 'high_glucose', 'low_BMI',
                         'high_BMI','gender', 'over_65', 'married', 'work_type',
@@ -113,4 +116,21 @@ print(stroke_corr_sorted)
 # high_BMI         0.012900
 # high_glucose     0.012812
 
-# => highest correlate factor is age & second is heart_disease
+# => highest correlation factor is age & second is heart_disease
+
+# plotly plots for occurrences of 
+
+
+'''
+Question 2:
+
+Find datasets 
+on heart disease, geography,state, and population size
+on hypertension, geography, state, and population size
+high BMI, geography,state, and population size
+on High glucose, geography,statem and population size
+Combine on state
+Find dataset
+on map of strokes
+Plotly bubble map to layer map of strokes over map of each health risk factor
+'''
