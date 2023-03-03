@@ -125,6 +125,8 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
 def risk_factor_df_ML(dataframe: str):
     correlations = dataanalysis.find_risk_factor_correlation(dataframe)
     dict_corr = {}
-    for correlation in correlations:
+    # for correlation in correlations:
         
+    
+
 

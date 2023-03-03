@@ -23,7 +23,7 @@ def main():
         "datasets/Diabetes_by_state.csv",
         "datasets/State_code_to_name.csv",
         "datasets/stroke_mortality_state.csv")              
-    find_risk_factor_correlation(risk_factor_data)
+    print(find_risk_factor_correlation(risk_factor_data))
 
 
 
