@@ -6,6 +6,7 @@ factors for stroke.
 import pandas as pd
 import numpy as np
 import geopandas as gpd
+from functools import reduce
 
 # Question 1: What does the data indicate are the risk factors
 unclean_data = pd.read_csv('datasets/stroke_data_1.csv')
@@ -139,25 +140,47 @@ Plotly bubble map to layer map of strokes over map of each health risk factor
 # create shapefile for geometry and state name 
 us_shapefile = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
 us_shapefile = us_shapefile[["NAME", "geometry"]]
-# print (us_shapefile)
+us_shapefile = us_shapefile.rename(columns={'NAME': 'State'})
+print(us_shapefile)
 
 # hypertension by state
 hypertension_state = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
-# print (hypertension_state)
+print(hypertension_state)
 
 # Obesity (high-BMI by state)
 obesity_state = pd.read_csv("datasets/Obesity_by_state.csv")
-obesity_state = obesity_state [["State", "Prevalence"]]
-# print (obesity_state)
+obesity_state = obesity_state[["State", "Prevalence"]]
+obesity_state = obesity_state.rename(columns={'Prevalence': 'Obesity_prev_perc'})
+print(obesity_state)
 
 # high-glucose (Diabetes by state)
 raw_diabetes_state = pd.read_csv("datasets/Diabetes_by_state.csv")
 state_abbr = pd.read_csv("datasets/State_code_to_name.csv")
 state_abbr = state_abbr[["code", "state"]]
-print(state_abbr)
-raw_diabetes_state = raw_diabetes_state.groupby('state_abbr').mean()
-diabetes_state = state_abbr.merge(raw_diabetes_state, left_on='state_abbr',
-                                   right_on='code', how='outer')
-print (diabetes_state)
+raw_diabetes_state = raw_diabetes_state.groupby('state_abbr', as_index=False).mean()
+diabetes_state = state_abbr.merge(raw_diabetes_state, left_on='code',
+                                   right_on='state_abbr', how='outer')
+diabetes_state = diabetes_state[["state", "value"]]
+diabetes_state = diabetes_state.rename(columns={'value': 'Diabetes_prev_perc', 'state': 'State'})
+print(diabetes_state)
 
+# stroke mortality by state
+stroke_mortality_df = pd.read_csv("datasets/stroke_mortality_state.csv")
+year_2020 = stroke_mortality_df["YEAR"] == 2020
+stroke_mortality_df = stroke_mortality_df[year_2020]
+stroke_mortality_df = stroke_mortality_df[["STATE", "RATE"]]
+stroke_mortality_df = state_abbr.merge(stroke_mortality_df, left_on='code',
+                                   right_on='STATE', how='outer')
+stroke_mortality_df = stroke_mortality_df[["state", "RATE"]]
+stroke_mortality_df = stroke_mortality_df.rename(columns={'RATE': 'stroke_mortality_rate', 'state': 'State'})
+print(stroke_mortality_df)
 
+# combine datasets
+dataframes_to_merge = [hypertension_state, obesity_state, diabetes_state, stroke_mortality_df]
+merged_risk_factors = reduce(lambda  left,right: pd.merge(left,right,on=['State'],
+                                            how='outer'), dataframes_to_merge)
+print(merged_risk_factors)
+ # combine with shapefile
+risk_factors_and_stroke_df = us_shapefile.merge(merged_risk_factors, left_on='State',
+                                    right_on='State', how='inner')
+print(risk_factors_and_stroke_df.columns)
