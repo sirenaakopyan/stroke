@@ -25,7 +25,7 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
     high_glucose = correlations[8]
     dataframe2 = dataframe.copy()
     dataframe2 = dataframe2[['hypertension', 'heart_disease', 'high_glucose','low_BMI',
-                             'high_BMI', 'over_65', 'married', 'residence', 'hypertension']]
+                             'high_BMI', 'over_65', 'married', 'residence']]
     dataframe2["hypertension"] = np.where(dataframe2["hypertension"] == 1, hypertension, 0)
     dataframe2['heart_disease'] = np.where(dataframe2['heart_disease'] == 1,
                                            heart_disease, 0)
