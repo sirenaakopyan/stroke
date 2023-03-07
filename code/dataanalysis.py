@@ -2,6 +2,10 @@ import datacleanup
 import pandas as pd
 import numpy as np
 import geopandas as gpd
+import plotly.express as px
+import plotly.graph_objects as go
+
+
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
     '''Calculate the correlation matrix.
@@ -47,38 +51,72 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
     mL_df = pd.merge(dataframe, dataframe3, left_index=True, right_index=True)
     return mL_df
     
-def map_risk_factors(dataframe: str):
+def map_risk_factors(map_data: pd.DataFrame):
     """
     Display a bubble map of the top risk factors 
     across the country.
     """
-    # # load the state codes and names
-    # state_codes = pd.read_csv("datasets/State_code_to_name.csv")
+    # Load the shapefile into a geopandas dataframe
+    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
 
-    # # merge the data with the state codes
-    # merged_data = pd.merge(dataframe, state_codes, on="state_code")
+    # Load the hypertension data into a pandas dataframe
+    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
 
-    # # create a scatter_geo trace for hypertension by state
-    # fig = px.scatter_geo(merged_data, locations="state_code",
-    #                      locationmode="USA-states", color="state_name",
-    #                      size="hypertension", hover_name="state_name",
-    #                      hover_data=["hypertension"])
+    # Merge the geopandas dataframe with the hypertension dataframe
+    map_data = map_data.merge(hypertension, on="State")
 
-    # # load the stroke mortality data by state
-    # stroke_data = pd.read_csv("datasets/stroke_mortality_state.csv")
-    # # merge with the state codes
-    # merged_stroke_data = pd.merge(stroke_data, state_codes, on="state_code")
 
-    # # add a choropleth map of stroke mortality by state
-    # fig.add_choropleth(locations=merged_stroke_data["state_code"],
-    #                    z=merged_stroke_data["stroke_mortality"],
-    #                    locationmode="USA-states",
-    #                    colorscale="Reds", colorbar_title="Stroke Mortality",
-    #                    geojson=counties_json)
+    # re-project the geometry column to a projected CRS before calculating the centroid coordinates
+    map_data = map_data.to_crs("EPSG:3395")
+    # calculate the longitude and latitude of each state's centroid
+    map_data['INTPTLON'] = map_data['geometry'].centroid.x
+    map_data['INTPTLAT'] = map_data['geometry'].centroid.y
 
-    # fig.update_layout(title="Hypertension and Stroke Mortality by State",
-    #                   geo_scope="usa")
-    pass
+    # Create a choropleth map of stroke mortality by state
+    fig = px.choropleth(
+    map_data, 
+    geojson=us_map.geometry.__geo_interface__,
+    locations='State', 
+    color='stroke_mortality_rate',
+    color_continuous_scale='Blues',
+    range_color=(0, map_data['stroke_mortality_rate'].max()),
+    scope='usa',
+    hover_data=['State', 'stroke_mortality_rate'], # Add 'stroke_mortality_rate' to the list
+    labels={'stroke_mortality_rate': 'Stroke Mortality Rate'}
+)
+
+
+    # Use plotly to create a scatter_geo trace for hypertension by state
+    fig.add_trace(
+        go.Scattergeo(
+            lon=map_data["INTPTLON"],
+            lat=map_data["INTPTLAT"],
+            text=map_data["State"],
+            marker=dict(
+                size=map_data.filter(
+                    like='Percent_with_hypertension').iloc[:, 0]*20,
+                color="blue",
+                opacity=0.5,
+                sizemode="diameter",
+                sizemin=4
+            ),
+            hoverinfo="text"
+        )
+    )
+
+    fig.update_layout(
+        title={
+            "text": "Stroke Mortality and Hypertension by State",
+            "y":0.98,
+            "x":0.5,
+            "xanchor": "center",
+            "yanchor": "top"
+        },
+        geo_scope="usa",
+        height=600
+    )
+
+    fig.show()
 
 
 def main():
@@ -90,9 +128,13 @@ def main():
         "datasets/Obesity_by_state.csv",
         "datasets/Diabetes_by_state.csv",
         "datasets/State_code_to_name.csv",
-        "datasets/stroke_mortality_state.csv")         
+        "datasets/stroke_mortality_state.csv")  
+    print("\n================================")       
+    print(map_data.columns)
     us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-    print(us_map.columns)
+    #print(us_map.columns)
+    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
+    #print(hypertension.columns)
     print(find_risk_factor_correlation(risk_factor_data))
     print(risk_factor_df_ML(risk_factor_data))
     map_risk_factors(map_data)
