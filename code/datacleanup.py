@@ -88,4 +88,4 @@ print(stroke_corr_sorted)
 # bmi                    0.042374
 # cleaned_avg_glucose    0.012812
 
-# => highest correlate factor is age & second is heart_disease weiufgweskuhd tesetig git commit
+# => highest correlate factor is age & second is heart_disease
