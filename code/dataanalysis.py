@@ -131,6 +131,7 @@ def main():
         "datasets/stroke_mortality_state.csv")  
     print("\n================================")       
     print(map_data.columns)
+<<<<<<< HEAD
     print("\n================================")
 
     us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
@@ -139,6 +140,12 @@ def main():
     print("\n================================")
 
     print(hypertension.columns)
+=======
+    # us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
+    #print(us_map.columns)
+    # hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
+    #print(hypertension.columns)
+>>>>>>> abf959a1fd28f872f9fd2b32c21715ed6554c015
     print(find_risk_factor_correlation(risk_factor_data))
     print(risk_factor_df_ML(risk_factor_data))
     map_risk_factors(map_data)

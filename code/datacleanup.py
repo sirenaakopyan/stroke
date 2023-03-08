@@ -86,7 +86,6 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     '''
     # create shapefile for geometry and state name 
     us_shapefile = gpd.read_file(shapefile)
-    us_shapefile = us_shapefile[["NAME", "geometry"]]
     us_shapefile = us_shapefile.rename(columns={'NAME': 'State'})
     # hypertension by state
     hypertension_state = pd.read_excel(hypertension, engine='openpyxl')
