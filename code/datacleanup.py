@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 from functools import reduce
+import dataanalysis
 
 unclean_data = pd.read_csv('datasets/stroke_data_1.csv')
 

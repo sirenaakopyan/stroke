@@ -4,6 +4,11 @@ import numpy as np
 import geopandas as gpd
 import plotly.express as px
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
 
 
 
@@ -76,7 +81,7 @@ def map_risk_factors(map_data: pd.DataFrame):
     us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
 
     # Load the hypertension data into a pandas dataframe
-    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
+    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
 
 
     # Merge the geopandas dataframe with the hypertension dataframe
@@ -180,7 +185,7 @@ def main():
 
     us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
     print(us_map.columns)
-    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
+    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
     print("\n================================")
 
     print(hypertension.columns)
@@ -192,7 +197,6 @@ def main():
     visualization_correlation_matrix(df)
     pair_visualization(df)
     print(find_risk_factor_correlation(risk_factor_data))
-    print(risk_factor_df_ML(risk_factor_data))
     map_risk_factors(map_data)
     print("\n================================")
     #Question 3
