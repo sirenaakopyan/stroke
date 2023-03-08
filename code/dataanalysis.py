@@ -62,21 +62,22 @@ def map_risk_factors(map_data: pd.DataFrame):
     # Load the hypertension data into a pandas dataframe
     hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
 
+
     # Merge the geopandas dataframe with the hypertension dataframe
     map_data = map_data.merge(hypertension, on="State")
+    map_data = map_data.reset_index()
 
+    print(map_data)
+    print(map_data.columns)
 
     # re-project the geometry column to a projected CRS before calculating the centroid coordinates
-    map_data = map_data.to_crs("EPSG:3395")
-    # calculate the longitude and latitude of each state's centroid
-    map_data['INTPTLON'] = map_data['geometry'].centroid.x
-    map_data['INTPTLAT'] = map_data['geometry'].centroid.y
+    #map_data = map_data.to_crs("EPSG:3395")
 
     # Create a choropleth map of stroke mortality by state
     fig = px.choropleth(
     map_data, 
     geojson=us_map.geometry.__geo_interface__,
-    locations='State', 
+        locations='STATEFP',
     color='stroke_mortality_rate',
     color_continuous_scale='Blues',
     range_color=(0, map_data['stroke_mortality_rate'].max()),
@@ -86,23 +87,23 @@ def map_risk_factors(map_data: pd.DataFrame):
 )
 
 
-    # Use plotly to create a scatter_geo trace for hypertension by state
-    fig.add_trace(
-        go.Scattergeo(
-            lon=map_data["INTPTLON"],
-            lat=map_data["INTPTLAT"],
-            text=map_data["State"],
-            marker=dict(
-                size=map_data.filter(
-                    like='Percent_with_hypertension').iloc[:, 0]*20,
-                color="blue",
-                opacity=0.5,
-                sizemode="diameter",
-                sizemin=4
-            ),
-            hoverinfo="text"
-        )
-    )
+    # # Use plotly to create a scatter_geo trace for hypertension by state
+    # fig.add_trace(
+    #     go.Scattergeo(
+    #         lon=map_data["INTPTLON"],
+    #         lat=map_data["INTPTLAT"],
+    #         text=map_data["STUSPS"],
+    #         marker=dict(
+    #             size=map_data.filter(
+    #                 like='Percent_with_hypertension').iloc[:, 0]*20,
+    #             color="blue",
+    #             opacity=0.5,
+    #             sizemode="diameter",
+    #             sizemin=4
+    #         ),
+    #         hoverinfo="text"
+    #     )
+    # )
 
     fig.update_layout(
         title={
@@ -129,10 +130,9 @@ def main():
         "datasets/Diabetes_by_state.csv",
         "datasets/State_code_to_name.csv",
         "datasets/stroke_mortality_state.csv")  
-    print("\n================================")       
-    print(map_data.columns)
-<<<<<<< HEAD
-    print("\n================================")
+    # print("\n================================")       
+    # print(map_data.columns)
+    # print("\n================================")
 
     us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
     print(us_map.columns)
@@ -140,12 +140,10 @@ def main():
     print("\n================================")
 
     print(hypertension.columns)
-=======
     # us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
     #print(us_map.columns)
     # hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
     #print(hypertension.columns)
->>>>>>> abf959a1fd28f872f9fd2b32c21715ed6554c015
     print(find_risk_factor_correlation(risk_factor_data))
     print(risk_factor_df_ML(risk_factor_data))
     map_risk_factors(map_data)
