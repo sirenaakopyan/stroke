@@ -1,5 +1,5 @@
 '''
-this file contains functions that clean up the csv dataset
+This file contains functions that clean up the csv dataset
 and attempt to find the top 3 demographic and health risk
 factors for stroke.
 '''
@@ -88,4 +88,4 @@ print(stroke_corr_sorted)
 # bmi                    0.042374
 # cleaned_avg_glucose    0.012812
 
-# => highest correlate factor is age & second is heart_disease
+# => highest correlate factor is age & second is heart_disease weiufgweskuhd tesetig git commit
