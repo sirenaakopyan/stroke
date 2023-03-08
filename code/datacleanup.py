@@ -8,6 +8,7 @@ import numpy as np
 import geopandas as gpd
 from functools import reduce
 
+unclean_data = pd.read_csv('datasets/stroke_data_1.csv')
 
 '''
 cleaning data in gender column. Male = 1 and Female = 0

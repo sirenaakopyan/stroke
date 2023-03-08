@@ -171,8 +171,8 @@ def map_risk_factors(map_data: pd.DataFrame):
 
 
 def main():
-    # risk_factor_data = datacleanup.create_risk_factor_df(
-    #     'datasets/stroke_data_1.csv')
+    risk_factor_data = datacleanup.create_risk_factor_df(
+        'datasets/stroke_data_1.csv')
     map_data = datacleanup.create_shapefile_for_bubble_map(
         "datasets/tl_2017_us_state/tl_2017_us_state.shp",
         "datasets/hypertension_by_state.xlsx",
