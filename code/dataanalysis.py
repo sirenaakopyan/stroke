@@ -4,7 +4,9 @@ import numpy as np
 import geopandas as gpd
 import plotly.express as px
 import plotly.graph_objects as go
-
+import plotly as plt
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
@@ -29,17 +31,17 @@ def visualization_correlation_matrix(df):
     df['age_cat'] = pd.cut(df['age'], bins = [0,13,18, 45,60,200], labels = ['Children', 'Teens', 'Adults','Mid Adults','Elderly'])
     df['glucose_cat'] = pd.cut(df['avg_glucose_level'], bins = [0,90,160,230,500], labels = ['Low', 'Normal', 'High', 'Very High'])
     df_copy = df.copy()
-    # df_copy['age'] = df_copy['age'].apply(lambda x: np.log(x+10)*3)
-    # df_copy['avg_glucose_level'] = df_copy['avg_glucose_level'].apply(lambda x: np.log(x+10)*2)
-    # df_copy['bmi'] = df_copy['bmi'].apply(lambda x: np.log(x+10)*2)
+    df_copy['age'] = df_copy['age'].apply(lambda x: np.log(x+10)*3)
+    df_copy['avg_glucose_level'] = df_copy['avg_glucose_level'].apply(lambda x: np.log(x+10)*2)
+    df_copy['bmi'] = df_copy['bmi'].apply(lambda x: np.log(x+10)*2)
 
-    # ## label encoding of ordinal categorical features
-    # for col in df_copy.columns:
-    #     df_copy[col] = le.fit_transform(df_copy[col])
+    ## label encoding of ordinal categorical features
+    for col in df_copy.columns:
+        df_copy[col] = le.fit_transform(df_copy[col])
 
-    # cols = df_copy.columns
-    # ## normalizing with standard scaler of numerical features
-    # df_copy[cols] = ss.fit_transform(df_copy[cols])
+    cols = df_copy.columns
+    ## normalizing with standard scaler of numerical features
+    df_copy[cols] = ss.fit_transform(df_copy[cols])
 
 
     # correlation map for all the features
@@ -106,68 +108,40 @@ def map_risk_factors(map_data: pd.DataFrame):
     Display a bubble map of the top risk factors 
     across the country.
     """
-    # Load the shapefile into a geopandas dataframe
-    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-
-    # Load the hypertension data into a pandas dataframe
-    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
-
-
-    # Merge the geopandas dataframe with the hypertension dataframe
-    map_data = map_data.merge(hypertension, on="State")
-    map_data = map_data.reset_index()
 
     print(map_data)
     print(map_data.columns)
 
-    # re-project the geometry column to a projected CRS before calculating the centroid coordinates
-    #map_data = map_data.to_crs("EPSG:3395")
-
-    # Create a choropleth map of stroke mortality by state
-    fig = px.choropleth(
-    map_data, 
-    geojson=map_data.geometry.__geo_interface__,
-        locations='STATEFP',
-    color='stroke_mortality_rate',
-    color_continuous_scale='Blues',
-    range_color=(0, map_data['stroke_mortality_rate'].max()),
-    scope='usa',
-    hover_data=['State', 'stroke_mortality_rate'], # Add 'stroke_mortality_rate' to the list
-    labels={'stroke_mortality_rate': 'Stroke Mortality Rate'}
-)
-
-
-    # # Use plotly to create a scatter_geo trace for hypertension by state
-    # fig.add_trace(
-    #     go.Scattergeo(
-    #         lon=map_data["INTPTLON"],
-    #         lat=map_data["INTPTLAT"],
-    #         text=map_data["STUSPS"],
-    #         marker=dict(
-    #             size=map_data.filter(
-    #                 like='Percent_with_hypertension').iloc[:, 0]*20,
-    #             color="blue",
-    #             opacity=0.5,
-    #             sizemode="diameter",
-    #             sizemin=4
-    #         ),
-    #         hoverinfo="text"
-    #     )
-    # )
-
+    fig = px.choropleth(map_data,
+                        locations='STUSPS',
+                        locationmode="USA-states",
+                        scope="usa",
+                        color='stroke_mortality_rate',
+                        color_continuous_scale="Viridis_r",
+                        hover_data=['State', 'stroke_mortality_rate'],
+                        labels={'stroke_mortality_rate': 'Stroke Mortality Rate', 'STUSPS': 'State ID'}
+                        )
+    
     fig.update_layout(
-        title={
-            "text": "Stroke Mortality and Hypertension by State",
-            "y":0.98,
-            "x":0.5,
-            "xanchor": "center",
-            "yanchor": "top"
-        },
-        geo_scope="usa",
-        height=600
+            title={
+                "text": "Stroke Mortality and Hypertension by State",
+                "y":0.98,
+                "x":0.5,
+                "xanchor": "center",
+                "yanchor": "top"
+            },
+        title_font_family="Times New Roman",
+        title_font_size=26,
+        title_font_color="black",
+        title_x=.45,
     )
 
+    # fig = px.scatter_geo(map_data, locations="STUSPS", color="Percent_with_hypertension",
+    #                      hover_name="Percent_with_hypertension", size="Percent_with_hypertension",
+    #                      projection="usa")
+
     fig.show()
+
 
 
 def main():
@@ -180,25 +154,13 @@ def main():
         "datasets/Diabetes_by_state.csv",
         "datasets/State_code_to_name.csv",
         "datasets/stroke_mortality_state.csv")  
-    # print("\n================================")       
-    # print(map_data.columns)
-    # print("\n================================")
 
-    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-    print(us_map.columns)
-    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
-    print("\n================================")
-
-    print(hypertension.columns)
-    # us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-    #print(us_map.columns)
-    # hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
-    #print(hypertension.columns)
     df = pd.read_csv('datasets/stroke_data_1.csv')
     visualization_correlation_matrix(df)
     pair_visualization(df)
     print(find_risk_factor_correlation(risk_factor_data))
     print(risk_factor_df_ML(risk_factor_data))
+
     map_risk_factors(map_data)
 
 
