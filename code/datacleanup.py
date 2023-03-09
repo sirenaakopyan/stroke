@@ -9,68 +9,6 @@ import geopandas as gpd
 from functools import reduce
 import dataanalysis
 
-unclean_data = pd.read_csv('datasets/stroke_data_1.csv')
-
-'''
-cleaning data in gender column. Male = 1 and Female = 0
-we do not worry about other genders because they are not
-included in the dataset
-'''
-cleaned_gender = unclean_data.copy()
-cleaned_gender.loc[cleaned_gender["gender"] == "Male", "gender"] = 1
-cleaned_gender.loc[cleaned_gender["gender"] == "Female", "gender"] = 0
-'''cleaning data in smoking_status column. has smoked = 1.
-Never smoked = 0. UNSURE WHAT TO DO ABOUT UNKNOWN'''
-cleaned_smoking = cleaned_gender.copy()
-cleaned_smoking.loc[cleaned_smoking['smoking_status'] == 'formerly smoked',
-                    'smoking_status'] = 1
-cleaned_smoking.loc[cleaned_smoking['smoking_status'] == 'smokes',
-                    'smoking_status'] = 1
-cleaned_smoking.loc[cleaned_smoking['smoking_status'] == 'never smoked',
-                    'smoking_status'] = 0
-print(cleaned_smoking)
-''' for BMI, according to the CDC
-If your BMI is less than 18.5, it falls within the underweight range.
-If your BMI is 18.5 to <25, it falls within the healthy weight range.
-If your BMI is 25.0 to <30, it falls within the overweight range.
-If your BMI is 30.0 or higher, it falls within the obesity range.
-'''
-# for now, convert BMI into categories
-# then determine if we can convert to binary
-cleaned_BMI = cleaned_smoking.copy()
-cleaned_BMI['BMI_cat'] = np.where(cleaned_BMI['bmi'] < 18.5,
-                                  'underweight',
-                                  np.where((cleaned_BMI['bmi'] >= 18.5) & (cleaned_BMI['bmi'] <= 24.9),
-                                           'healthy weight',
-                                           np.where((cleaned_BMI['bmi'] >= 25) & (cleaned_BMI['bmi'] <= 29.9),
-                                                    'overweight',
-                                                    'obese')))
-
-
-#print(cleaned_BMI)
-
-# convert avg_glucose_level into binary
-# 99 or below is 0, 100+ is 1
-# source: cdc gov
-
-cleaned_glucose = cleaned_BMI.copy()
-cleaned_glucose['cleaned_avg_glucose'] = np.where((cleaned_glucose['avg_glucose_level'] <= 99),
-                                                  0, np.where((cleaned_glucose['avg_glucose_level'] >= 100),
-                                                              1, cleaned_glucose['avg_glucose_level'])).astype(int)
-
-#print(cleaned_glucose)
-
-# convert age into binary
-# less than 65 is 0
-# 65+ is 1
-
-cleaned_age = cleaned_glucose.copy()
-cleaned_age['cleaned_age'] = np.where((cleaned_age['age'] <= 64),
-                                              0, np.where((cleaned_age['age'] >= 65),
-                                                          1, cleaned_age['age'])).astype(int)
-print(cleaned_age)
-
-
 def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     '''
     Cleans the stroke data file. Converts all columns of interest to binary.
@@ -131,6 +69,63 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     return final_df
 
 
+<<<<<<< HEAD
+def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: str,
+                                    diabetes: str, abbr: str, stroke: str) -> gpd.GeoDataFrame:
+    '''
+    Question 2:
+    Since we see Heart Disease has highest correlation with stroke
+    map different heart disease/stroke risk factors
+    Find datasets
+    on hypertension, geography, state, and population size
+    high BMI (obesity), geography,state, and population size
+    on High glucose (diabetes), geography,state and population size
+    Combine on state
+    Find dataset
+    on map of strokes
+    Plotly bubble map to layer map of strokes over map of each health risk factor
+    '''
+    # create shapefile for geometry and state name
+    us_shapefile = gpd.read_file(shapefile)
+    us_shapefile = us_shapefile.rename(columns={'NAME': 'State'})
+    # hypertension by state
+    hypertension_state = pd.read_excel(hypertension, engine='openpyxl')
+    # Obesity (high-BMI by state)
+    obesity_state = pd.read_csv(obesity)
+    obesity_state = obesity_state[["State", "Prevalence"]]
+    obesity_state = obesity_state.rename(
+        columns={'Prevalence': 'Obesity_prev_perc'})
+    # high-glucose (Diabetes by state)
+    raw_diabetes_state = pd.read_csv(diabetes)
+    state_abbr = pd.read_csv(abbr)
+    state_abbr = state_abbr[["code", "state"]]
+    raw_diabetes_state = raw_diabetes_state.groupby(
+        'state_abbr', as_index=False).mean()
+    diabetes_state = state_abbr.merge(raw_diabetes_state, left_on='code',
+                                      right_on='state_abbr', how='outer')
+    diabetes_state = diabetes_state[["state", "value"]]
+    diabetes_state = diabetes_state.rename(columns={'value': 'Diabetes_prev_perc',
+                                                    'state': 'State'})
+    # stroke mortality by state
+    stroke_mortality_df = pd.read_csv(stroke)
+    year_2020 = stroke_mortality_df["YEAR"] == 2020
+    stroke_mortality_df = stroke_mortality_df[year_2020]
+    stroke_mortality_df = stroke_mortality_df[["STATE", "RATE"]]
+    stroke_mortality_df = state_abbr.merge(stroke_mortality_df, left_on='code',
+                                           right_on='STATE', how='outer')
+    stroke_mortality_df = stroke_mortality_df[["state", "RATE"]]
+    stroke_mortality_df = stroke_mortality_df.rename(
+        columns={'RATE': 'stroke_mortality_rate', 'state': 'State'})
+    # combine datasets
+    dataframes_to_merge = [hypertension_state,
+                           obesity_state, diabetes_state, stroke_mortality_df]
+    merged_risk_factors = reduce(lambda left, right: pd.merge(left, right, on=['State'],
+                                                              how='outer'), dataframes_to_merge)
+    # combine with shapefile
+    risk_factors_and_stroke_df = us_shapefile.merge(merged_risk_factors, left_on='State',
+                                                    right_on='State', how='inner')
+    return risk_factors_and_stroke_df
+=======
 # Calculate the correlation matrix
 corr_matrix = cleaned_age.corr()
 
@@ -142,6 +137,7 @@ stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
 
 # Print the sorted correlation coefficients
 print(stroke_corr_sorted)
+>>>>>>> 3387a6a15e4feba85feee22cc31c1a0cf5e56cc4
 
 def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     '''
@@ -277,6 +273,22 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     us_shapefile = us_shapefile[~us_shapefile['State'].isin(excluded_states)]
     merged_risk_factors = merged_risk_factors[~merged_risk_factors['State'].isin(
         excluded_states)]
+<<<<<<< HEAD
+    # print(merged_risk_factors)
+    # print("/n=======================================================")
+    # print(us_shapefile)
+    # combine with shapefile
+    risk_factors_and_stroke_df = us_shapefile.merge(
+        merged_risk_factors, left_on='State', right_on='State', how='inner')
+    # print("/n=======================================================")
+
+    # print(risk_factors_and_stroke_df)
+
+
+    return risk_factors_and_stroke_df
+
+
+=======
 
     risk_factors_and_stroke_df = us_shapefile.merge(
         merged_risk_factors, left_on='State', right_on='State', how='inner')
@@ -315,3 +327,4 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
     mL_df = pd.merge(dataframe, dataframe2, left_index=True, right_index=True)
     # mL_df = mL_df[['stroke', 'row_corr']]
     return mL_df
+>>>>>>> 3387a6a15e4feba85feee22cc31c1a0cf5e56cc4
