@@ -11,7 +11,7 @@ def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
     # normalize data
     shuffled_data = ml_df.sample(frac=1,random_state=4)
     stroke_df = ml_df.loc[ml_df['stroke'] == 1]
-    non_stroke_df = ml_df.loc[ml_df['stroke'] == 0].sample(n= 1000,random_state= 101)
+    non_stroke_df = ml_df.loc[ml_df['stroke'] == 0].sample(n=1000, random_state=101)
     # non-stroke sufferers were reduced to 3500 to balance the data set.
     normalized_stroke = pd.concat([stroke_df, non_stroke_df])
     # features is the accuracy score
@@ -39,7 +39,7 @@ def plot_confusion_matrix(cm: list) -> None:
     for i in range(2):
         for j in range(2):
             ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
-    plt.show()
+    fig.savefig('ML_confusion_matrix.png',  bbox_inches='tight')
 
 
 def main():
