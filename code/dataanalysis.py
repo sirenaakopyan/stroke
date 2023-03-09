@@ -9,9 +9,6 @@ import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-import plotly as plt
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
