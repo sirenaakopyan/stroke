@@ -334,22 +334,9 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     us_shapefile = us_shapefile[~us_shapefile['State'].isin(excluded_states)]
     merged_risk_factors = merged_risk_factors[~merged_risk_factors['State'].isin(
         excluded_states)]
-    # print(merged_risk_factors)
-    # print("/n=======================================================")
-    # print(us_shapefile)
-    # combine with shapefile
-<<<<<<< HEAD
+
     risk_factors_and_stroke_df = us_shapefile.merge(
         merged_risk_factors, left_on='State', right_on='State', how='inner')
-    # print("/n=======================================================")
-
-    # print(risk_factors_and_stroke_df)
-
-
-    return risk_factors_and_stroke_df
-=======
-    risk_factors_and_stroke_df = us_shapefile.merge(merged_risk_factors, left_on='State',
-                                    right_on='State', how='inner')
     return risk_factors_and_stroke_df
 
 
@@ -384,4 +371,3 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
     mL_df = pd.merge(dataframe, dataframe2, left_index=True, right_index=True)
     # mL_df = mL_df[['stroke', 'row_corr']]
     return mL_df
->>>>>>> aad4861dc5976626f4cb5f957d2cd623f26eb234
