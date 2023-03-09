@@ -69,75 +69,6 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     return final_df
 
 
-<<<<<<< HEAD
-def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: str,
-                                    diabetes: str, abbr: str, stroke: str) -> gpd.GeoDataFrame:
-    '''
-    Question 2:
-    Since we see Heart Disease has highest correlation with stroke
-    map different heart disease/stroke risk factors
-    Find datasets
-    on hypertension, geography, state, and population size
-    high BMI (obesity), geography,state, and population size
-    on High glucose (diabetes), geography,state and population size
-    Combine on state
-    Find dataset
-    on map of strokes
-    Plotly bubble map to layer map of strokes over map of each health risk factor
-    '''
-    # create shapefile for geometry and state name
-    us_shapefile = gpd.read_file(shapefile)
-    us_shapefile = us_shapefile.rename(columns={'NAME': 'State'})
-    # hypertension by state
-    hypertension_state = pd.read_excel(hypertension, engine='openpyxl')
-    # Obesity (high-BMI by state)
-    obesity_state = pd.read_csv(obesity)
-    obesity_state = obesity_state[["State", "Prevalence"]]
-    obesity_state = obesity_state.rename(
-        columns={'Prevalence': 'Obesity_prev_perc'})
-    # high-glucose (Diabetes by state)
-    raw_diabetes_state = pd.read_csv(diabetes)
-    state_abbr = pd.read_csv(abbr)
-    state_abbr = state_abbr[["code", "state"]]
-    raw_diabetes_state = raw_diabetes_state.groupby(
-        'state_abbr', as_index=False).mean()
-    diabetes_state = state_abbr.merge(raw_diabetes_state, left_on='code',
-                                      right_on='state_abbr', how='outer')
-    diabetes_state = diabetes_state[["state", "value"]]
-    diabetes_state = diabetes_state.rename(columns={'value': 'Diabetes_prev_perc',
-                                                    'state': 'State'})
-    # stroke mortality by state
-    stroke_mortality_df = pd.read_csv(stroke)
-    year_2020 = stroke_mortality_df["YEAR"] == 2020
-    stroke_mortality_df = stroke_mortality_df[year_2020]
-    stroke_mortality_df = stroke_mortality_df[["STATE", "RATE"]]
-    stroke_mortality_df = state_abbr.merge(stroke_mortality_df, left_on='code',
-                                           right_on='STATE', how='outer')
-    stroke_mortality_df = stroke_mortality_df[["state", "RATE"]]
-    stroke_mortality_df = stroke_mortality_df.rename(
-        columns={'RATE': 'stroke_mortality_rate', 'state': 'State'})
-    # combine datasets
-    dataframes_to_merge = [hypertension_state,
-                           obesity_state, diabetes_state, stroke_mortality_df]
-    merged_risk_factors = reduce(lambda left, right: pd.merge(left, right, on=['State'],
-                                                              how='outer'), dataframes_to_merge)
-    # combine with shapefile
-    risk_factors_and_stroke_df = us_shapefile.merge(merged_risk_factors, left_on='State',
-                                                    right_on='State', how='inner')
-    return risk_factors_and_stroke_df
-=======
-# Calculate the correlation matrix
-corr_matrix = cleaned_age.corr()
-
-# Extract the correlation coefficients for stroke
-stroke_corr = corr_matrix["stroke"]
-
-# Sort the correlation coefficients in descending order
-stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
-
-# Print the sorted correlation coefficients
-print(stroke_corr_sorted)
->>>>>>> 3387a6a15e4feba85feee22cc31c1a0cf5e56cc4
 
 def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     '''
@@ -273,22 +204,6 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     us_shapefile = us_shapefile[~us_shapefile['State'].isin(excluded_states)]
     merged_risk_factors = merged_risk_factors[~merged_risk_factors['State'].isin(
         excluded_states)]
-<<<<<<< HEAD
-    # print(merged_risk_factors)
-    # print("/n=======================================================")
-    # print(us_shapefile)
-    # combine with shapefile
-    risk_factors_and_stroke_df = us_shapefile.merge(
-        merged_risk_factors, left_on='State', right_on='State', how='inner')
-    # print("/n=======================================================")
-
-    # print(risk_factors_and_stroke_df)
-
-
-    return risk_factors_and_stroke_df
-
-
-=======
 
     risk_factors_and_stroke_df = us_shapefile.merge(
         merged_risk_factors, left_on='State', right_on='State', how='inner')
@@ -327,4 +242,3 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
     mL_df = pd.merge(dataframe, dataframe2, left_index=True, right_index=True)
     # mL_df = mL_df[['stroke', 'row_corr']]
     return mL_df
->>>>>>> 3387a6a15e4feba85feee22cc31c1a0cf5e56cc4
