@@ -143,35 +143,6 @@ def map_risk_factors(map_data: pd.DataFrame):
     fig.show()
 
 
-
-def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
-    # features is the accuracy score
-    features = ml_df.drop('stroke', axis = 1)
-    # label is stroke, which we want to predict
-    labels = ml_df['stroke']
-    # Breaks the data into 80% train and 20% test
-    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.3)
-    logistic_model = LogisticRegression(solver='liblinear', random_state=0)
-    # train model on training set
-    logistic_model.fit(features_train, labels_train)
-    predictions = logistic_model.predict(features_test)
-    confusion_mat = confusion_matrix(labels_test, predictions)
-    return confusion_mat
-
-
-def plot_confusion_matrix(cm: list) -> None:
-    fig, ax = plt.subplots(figsize=(8, 8))
-    ax.imshow(cm)
-    ax.grid(False)
-    ax.xaxis.set(ticks=(0, 1), ticklabels=('Predicted 0s', 'Predicted 1s'))
-    ax.yaxis.set(ticks=(0, 1), ticklabels=('Actual 0s', 'Actual 1s'))
-    ax.set_ylim(1.5, -0.5)
-    for i in range(2):
-        for j in range(2):
-            ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
-    plt.show()
-
-
 def main():
     risk_factor_data = datacleanup.create_risk_factor_df(
         'datasets/stroke_data_1.csv')
@@ -198,10 +169,8 @@ def main():
 
     map_risk_factors(map_data)
     print("\n================================")
-    #Question 3
-    ml_data = datacleanup.risk_factor_df_ML(risk_factor_data)
-    confusion_matrix = fit_and_predit_stroke(ml_data)
-    plot_confusion_matrix(confusion_matrix)
+   
+    
 
 
 if __name__ == '__main__':
