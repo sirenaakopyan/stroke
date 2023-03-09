@@ -14,7 +14,6 @@ def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
     non_stroke_df = ml_df.loc[ml_df['stroke'] == 0].sample(n= 1000,random_state= 101)
     # non-stroke sufferers were reduced to 3500 to balance the data set.
     normalized_stroke = pd.concat([stroke_df, non_stroke_df])
-    print(normalized_stroke[('stroke')].value_counts())
     # features is the accuracy score
     features = normalized_stroke.drop('stroke', axis=1)
     # label is stroke, which we want to predict
@@ -26,7 +25,8 @@ def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
     logistic_model.fit(features_train, labels_train)
     predictions = logistic_model.predict(features_test)
     confusion_mat = confusion_matrix(labels_test, predictions)
-    return confusion_mat
+    accuracy = logistic_model.score(features_test, labels_test)
+    return confusion_mat, accuracy
 
 
 def plot_confusion_matrix(cm: list) -> None:
@@ -47,7 +47,13 @@ def main():
         'datasets/stroke_data_1.csv')
     ml_data = cleanup_ML.risk_factor_df_ML(risk_factor_data)
     confusion_matrix = fit_and_predit_stroke(ml_data)
-    plot_confusion_matrix(confusion_matrix)
+    print(confusion_matrix)
+    print(f"True Negatives: {((((confusion_matrix[0])[0]))[0])},\
+          False Positive: {((((confusion_matrix[0])[0]))[1])},\
+          False Negatives: {((((confusion_matrix[0])[1]))[0])},\
+          True Postives: {((((confusion_matrix[0])[1]))[1])}")
+    print(f'Accuracy of predicting no stroke:{confusion_matrix[1]}')
+    plot_confusion_matrix(confusion_matrix[0])
 
 
 if __name__ == '__main__':
