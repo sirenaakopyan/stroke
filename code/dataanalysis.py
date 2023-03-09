@@ -4,6 +4,11 @@ import numpy as np
 import geopandas as gpd
 import plotly.express as px
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
 import plotly as plt
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -68,46 +73,22 @@ def visualization_correlation_matrix(df):
     fig.show()
     plt.savefig('foo.png',  bbox_inches='tight')
 
-
-def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
-    correlations = find_risk_factor_correlation(dataframe)
-    over_65 = correlations[1]
-    heart_disease = correlations[2]
-    hypertension = correlations[3]
-    married = correlations[4]
-    low_bmi = correlations[5]
-    residence = correlations[6]
-    high_BMI = correlations[7]
-    high_glucose = correlations[8]
-    dataframe2 = dataframe.copy()
-    dataframe2 = dataframe2[['hypertension', 'heart_disease', 'high_glucose','low_BMI',
-                             'high_BMI', 'over_65', 'married', 'residence']]
-    dataframe2["hypertension"] = np.where(dataframe2["hypertension"] == 1, hypertension, 0)
-    dataframe2['heart_disease'] = np.where(dataframe2['heart_disease'] == 1,
-                                           heart_disease, 0)
-    dataframe2['high_glucose'] = np.where(dataframe2['high_glucose'] == 1,
-                                          high_glucose, 0)
-    dataframe2['low_BMI'] = np.where(dataframe2['low_BMI'] == 1, low_bmi, 0)
-    dataframe2['high_BMI'] = np.where(dataframe2['high_BMI'] == 1, high_BMI,
-                                       0)
-    dataframe2['over_65'] = np.where(dataframe2['over_65'] == 1, over_65,
-                                     0)
-    dataframe2['married'] = np.where(dataframe2['married'] == 1, married,
-                                     0)
-    dataframe2['residence'] = np.where(dataframe2['residence'] == 1, residence,
-                                       0)
-    dataframe3 = dataframe2.copy()
-    dataframe3.loc[:, 'row_corr'] = dataframe3.sum(axis=1)/ (hypertension + heart_disease + high_glucose + low_bmi
-                                                             + high_BMI + over_65 + married + residence)
-    dataframe3 = dataframe3[['row_corr']]
-    mL_df = pd.merge(dataframe, dataframe3, left_index=True, right_index=True)
-    return mL_df
     
 def map_risk_factors(map_data: pd.DataFrame):
     """
     Display a bubble map of the top risk factors 
     across the country.
     """
+    # Load the shapefile into a geopandas dataframe
+    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
+
+    # Load the hypertension data into a pandas dataframe
+    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
+
+
+    # Merge the geopandas dataframe with the hypertension dataframe
+    map_data = map_data.merge(hypertension, on="State")
+    map_data = map_data.reset_index()
 
     print(map_data)
     print(map_data.columns)
@@ -144,6 +125,34 @@ def map_risk_factors(map_data: pd.DataFrame):
 
 
 
+def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
+    # features is the accuracy score
+    features = ml_df.drop('stroke', axis = 1)
+    # label is stroke, which we want to predict
+    labels = ml_df['stroke']
+    # Breaks the data into 80% train and 20% test
+    features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.3)
+    logistic_model = LogisticRegression(solver='liblinear', random_state=0)
+    # train model on training set
+    logistic_model.fit(features_train, labels_train)
+    predictions = logistic_model.predict(features_test)
+    confusion_mat = confusion_matrix(labels_test, predictions)
+    return confusion_mat
+
+
+def plot_confusion_matrix(cm: list) -> None:
+    fig, ax = plt.subplots(figsize=(8, 8))
+    ax.imshow(cm)
+    ax.grid(False)
+    ax.xaxis.set(ticks=(0, 1), ticklabels=('Predicted 0s', 'Predicted 1s'))
+    ax.yaxis.set(ticks=(0, 1), ticklabels=('Actual 0s', 'Actual 1s'))
+    ax.set_ylim(1.5, -0.5)
+    for i in range(2):
+        for j in range(2):
+            ax.text(j, i, cm[i, j], ha='center', va='center', color='red')
+    plt.show()
+
+
 def main():
     risk_factor_data = datacleanup.create_risk_factor_df(
         'datasets/stroke_data_1.csv')
@@ -154,15 +163,26 @@ def main():
         "datasets/Diabetes_by_state.csv",
         "datasets/State_code_to_name.csv",
         "datasets/stroke_mortality_state.csv")  
+    # print("\n================================")       
+    # print(map_data.columns)
+    # print("\n================================")
+
+    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
+    print(us_map.columns)
+    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
+    print("\n================================")
 
     df = pd.read_csv('datasets/stroke_data_1.csv')
     visualization_correlation_matrix(df)
     pair_visualization(df)
     print(find_risk_factor_correlation(risk_factor_data))
-    print(risk_factor_df_ML(risk_factor_data))
 
     map_risk_factors(map_data)
-
+    print("\n================================")
+    #Question 3
+    ml_data = datacleanup.risk_factor_df_ML(risk_factor_data)
+    confusion_matrix = fit_and_predit_stroke(ml_data)
+    plot_confusion_matrix(confusion_matrix)
 
 
 if __name__ == '__main__':
