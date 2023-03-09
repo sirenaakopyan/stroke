@@ -280,6 +280,7 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
 
     risk_factors_and_stroke_df = us_shapefile.merge(
         merged_risk_factors, left_on='State', right_on='State', how='inner')
+    
     return risk_factors_and_stroke_df
 
 
