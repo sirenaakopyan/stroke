@@ -21,33 +21,30 @@ def map_risk_factors(map_data: pd.DataFrame):
 
     hyp_map_data = map_data.dropna(subset=['Percent_with_hypertension'])
 
+
+    # Define a variable for percent with hypertension
+    percent_with_hypertension = (
+        hyp_map_data['Percent_with_hypertension']).round(2)
+
     fig.add_trace(go.Scattergeo(
+        name="Percent with Hypertension",
         locations=hyp_map_data['STUSPS'],
         locationmode='USA-states',
-
-        # Longitude of center of the United States
         lon=[-98.5] * len(hyp_map_data),
-        # Latitude of center of the United States
         lat=[39.8] * len(hyp_map_data),
         marker=dict(
             size=hyp_map_data['Percent_with_hypertension'],
             sizemode='diameter',
-            sizeref=10000000000 * hyp_map_data['Percent_with_hypertension'].max() / (7 ** 14),
+            sizeref=10000000000 *
+            hyp_map_data['Percent_with_hypertension'].max() / (7 ** 14),
             color=hyp_map_data['Percent_with_hypertension'],
-            # line=dict(
-            #     width=1,
-            #     color='grey',
-            # )
             colorscale='greys'
         ),
-        name='Percent with Hypertension',
-        text=hyp_map_data['Percent_with_hypertension'].apply(
-            lambda x: f'{x:.2f}%'),
-        hovertemplate="%{text} of population<br>" +
-        "<extra></extra>"
+        hoverinfo='none'
     ))
 
     fig.add_trace(go.Choropleth(
+        name="Stroke Mortality Rate",
         locations=map_data['STUSPS'],
         z=map_data['stroke_mortality_rate'],
         locationmode="USA-states",
@@ -56,10 +53,13 @@ def map_risk_factors(map_data: pd.DataFrame):
         marker_line_color='white',
         marker_line_width=0.5,
         colorbar_title="Stroke Mortality Rate",
-        hovertemplate="%{text} <br>" +
-        "Stroke Mortality Rate: %{z}<br>" +
-        "<extra></extra>" + "%{text} of population<br>" +
+        # Use the percent_with_hypertension variable in the hovertemplate
+        hovertemplate="%{text}<br>" +
+        "Hypertension Rate: %{customdata:.2f}%<br>" +
+        "Stroke Mortality Rate: %{z:.2f}%<br>" +
         "<extra></extra>",
+        # Use the percent_with_hypertension variable as customdata
+        customdata=percent_with_hypertension,
         text=map_data['State']
     ))
 
@@ -75,6 +75,27 @@ def map_risk_factors(map_data: pd.DataFrame):
         title_font_size=26,
         title_font_color="black",
         title_x=.45
+    )
+
+
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            title={
+                'text': 'My Legend Title',
+                'font': {
+                    'family': 'Times New Roman',
+                    'size': 18,
+                    'color': 'red'
+                }
+            },
+            font=dict(
+                family="Courier",
+                size=22,
+                color="black"
+            ),
+            traceorder="reversed"
+        )
     )
 
     fig.show()
