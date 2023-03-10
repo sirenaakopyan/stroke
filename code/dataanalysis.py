@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import chi2_contingency
-import itertools
 
 def normalize_data(df):
     shuffled_data = df.sample(frac=1,random_state=4)

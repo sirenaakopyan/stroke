@@ -84,8 +84,6 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     on map of strokes
     Plotly bubble map to layer map of strokes over map of each health risk factor
     '''
-
-
     # create shapefile for geometry and state name
     us_shapefile = gpd.read_file(shapefile)
     us_shapefile = us_shapefile.rename(columns={'NAME': 'State'})
