@@ -194,19 +194,6 @@ def map_risk_factors(map_data: pd.DataFrame):
     Display a bubble map of the top risk factors 
     across the country.
     """
-    # Load the shapefile into a geopandas dataframe
-    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-
-    # Load the hypertension data into a pandas dataframe
-    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx")
-
-
-    # Merge the geopandas dataframe with the hypertension dataframe
-    map_data = map_data.merge(hypertension, on="State")
-    map_data = map_data.reset_index()
-
-    print(map_data)
-    print(map_data.columns)
 
     fig = px.choropleth(map_data,
                         locations='STUSPS',
@@ -229,7 +216,7 @@ def map_risk_factors(map_data: pd.DataFrame):
         title_font_family="Times New Roman",
         title_font_size=26,
         title_font_color="black",
-        title_x=.45,
+        title_x=.45
     )
 
     # fig = px.scatter_geo(map_data, locations="STUSPS", color="Percent_with_hypertension",
