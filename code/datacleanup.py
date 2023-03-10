@@ -45,9 +45,9 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
                                         (cleaned_BMI['bmi'] <= 29.9), 1, 0))
     cleaned_glucose = cleaned_BMI.copy()
     cleaned_glucose['high_glucose'] = np.where((cleaned_glucose['avg_glucose_level']
-                                                <= 99),0,
+                                                <= 99.9),0,
                                                 np.where((cleaned_glucose['avg_glucose_level']
-                                                          >= 100),
+                                                          > 100.001),
                                                          1, cleaned_glucose['avg_glucose_level'])).astype(int)
     cleaned_age = cleaned_glucose.copy()
     cleaned_age['over_65'] = np.where((cleaned_age['age'] <= 64),
