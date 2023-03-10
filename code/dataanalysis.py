@@ -6,9 +6,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
-from sklearn.model_selection import train_test_split
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
@@ -20,12 +17,108 @@ def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
     stroke_corr = corr_matrix["stroke"]
     stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
     return stroke_corr_sorted
-
+'''
 def pair_visualization(df):
+
     fig = plt.figure(figsize=(20,15),dpi=100)
     sns.pairplot(data=df,hue='stroke',size=2,palette='OrRd')
     plt.savefig('kk.png',  bbox_inches='tight')
+'''
 
+def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
+    # normalize data
+    shuffled_data = risk_factor_df.sample(frac=1,random_state=4)
+    stroke_df = risk_factor_df.loc[risk_factor_df['stroke'] == 1]
+    non_stroke_df = risk_factor_df.loc[risk_factor_df['stroke'] == 0].sample(n=1000, random_state=101)
+    normalized_stroke = pd.concat([stroke_df, non_stroke_df])
+    
+
+    # bar chart 1: stroke vs age
+    over_65_stroke = sns.countplot(x='stroke', hue = 'over_65', data = normalized_stroke, palette = "Set1")
+    over_65_stroke.set_xticklabels(["No", "Yes"])
+    over_65_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Age', labels=['Under 65', 'Over 65'])
+    plt.title("Age and Stroke")
+    plt.savefig('over_65.png',  bbox_inches='tight')
+    # plt.show()
+    
+    # bar chart 2: stroke vs smoking
+    smoking_status_stroke = sns.countplot(x='stroke', hue = 'smoking_status', data = normalized_stroke, palette = "Set1")
+    smoking_status_stroke.set_xticklabels(["No", "Yes"])
+    smoking_status_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Smoking Status', labels=['Not a Smoker', 'Smoker', 'Unknown'])
+    plt.title("Smoking Status and Stroke")
+    plt.savefig('smoking_status.png',  bbox_inches='tight')
+    # plt.show()  
+    # bar chart 3: stroke vs gender
+    gender_stroke = sns.countplot(x='stroke', hue = 'gender', data = normalized_stroke, palette = "Set1")
+    gender_stroke.set_xticklabels(["No", "Yes"])
+    gender_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Gender', labels=['Female', 'Male'])
+    plt.title("Gender and Stroke")
+    plt.savefig('gender.png',  bbox_inches='tight')
+    # plt.show()
+    # bar chart 4: stroke vs heart disease
+    heart_disease_stroke = sns.countplot(x='stroke', hue = 'heart_disease', data = normalized_stroke, palette = "Set1")
+    heart_disease_stroke.set_xticklabels(["No", "Yes"])
+    heart_disease_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Status', labels=['did not have heart disease', 'had heart disease'])
+    plt.title("Heart Disease and Stroke")
+    plt.savefig('heart_disease.png',  bbox_inches='tight')
+    # plt.show()
+    # bar chart 5: stroke vs hypertension
+    hypertension_and_stroke = sns.countplot(x='stroke', hue = 'hypertension', data = normalized_stroke, palette = "Set1")
+    hypertension_and_stroke.set_xticklabels(["No", "Yes"])
+    hypertension_and_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Status', labels=['did not have hypertension', 'had hypertension'])
+    plt.title("Hypertension and Stroke")
+    plt.savefig('hypertension.png',  bbox_inches='tight')
+    # plt.show()
+    # bar chart 6: stroke vs married
+    marital_status_stroke = sns.countplot(x='stroke', hue = 'married', data = normalized_stroke, palette = "Set1")
+    marital_status_stroke.set_xticklabels(["No", "Yes"])
+    marital_status_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Marital Status', labels=['not married', 'married'])
+    plt.title("Marital Status and Stroke")
+    plt.savefig('Marital_status.png',  bbox_inches='tight')
+    # plt.show()
+    # bar chart 7: stroke vs high glucose
+    high_glucose_stroke = sns.countplot(x='stroke', hue = 'high_glucose', data = normalized_stroke, palette = "Set1")
+    high_glucose_stroke.set_xticklabels(["No", "Yes"])
+    high_glucose_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Status', labels=['normal glucose', 'high glucose'])
+    plt.title("Glucose level and Stroke")
+    plt.savefig('glucose.png',  bbox_inches='tight')
+    # plt.show()
+    # bar chart 8: stroke vs high BMI
+    high_bmi_stroke = sns.countplot(x='stroke', hue = 'high_BMI', data = normalized_stroke, palette = "Set1")
+    high_bmi_stroke.set_xticklabels(["No", "Yes"])
+    high_bmi_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Status', labels=['normal BMI', 'high BMI'])
+    plt.title("High BMI and Stroke")
+    plt.savefig('high_bmi.png',  bbox_inches='tight')
+    # plt.show()
+    # bar chart 9: stroke vs low BMI
+    low_bmi_stroke = sns.countplot(x='stroke', hue = 'low_BMI', data = normalized_stroke, palette = "Set1")
+    low_bmi_stroke.set_xticklabels(["No", "Yes"])
+    low_bmi_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='Status', labels=['normal BMI', 'low BMI'])
+    plt.title("low BMI and Stroke")
+    plt.savefig('low_bmi.png',  bbox_inches='tight')
+    #plt.show()
+    # bar chart 10: stroke vs residence
+    residence_stroke = sns.countplot(x='stroke', hue = 'residence', data = normalized_stroke, palette = "Set1")
+    residence_stroke.set_xticklabels(["No", "Yes"])
+    residence_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
+    plt.legend(title='residence type', labels=['rural', 'urban'])
+    plt.title("Residence Type and Stroke")
+    plt.savefig('residence_type.png',  bbox_inches='tight')
+    # plt.show()
+
+    # bar chart plotting all 
+
+
+'''
 def visualization_correlation_matrix(df):
     
     # feature log transformations 
@@ -69,43 +162,9 @@ def visualization_correlation_matrix(df):
     # ax.set_yticklabels(yticks, {'font':'serif', 'size':10, 'weight':'bold'}, rotation = 0, alpha = 0.9)
     fig.show()
     plt.savefig('foo.png',  bbox_inches='tight')
+'''
 
-
-def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
-    correlations = find_risk_factor_correlation(dataframe)
-    over_65 = correlations[1]
-    heart_disease = correlations[2]
-    hypertension = correlations[3]
-    married = correlations[4]
-    low_bmi = correlations[5]
-    residence = correlations[6]
-    high_BMI = correlations[7]
-    high_glucose = correlations[8]
-    dataframe2 = dataframe.copy()
-    dataframe2 = dataframe2[['hypertension', 'heart_disease', 'high_glucose', 'low_BMI',
-                             'high_BMI', 'over_65', 'married', 'residence']]
-    dataframe2["hypertension"] = np.where(
-        dataframe2["hypertension"] == 1, hypertension, 0)
-    dataframe2['heart_disease'] = np.where(dataframe2['heart_disease'] == 1,
-                                           heart_disease, 0)
-    dataframe2['high_glucose'] = np.where(dataframe2['high_glucose'] == 1,
-                                          high_glucose, 0)
-    dataframe2['low_BMI'] = np.where(dataframe2['low_BMI'] == 1, low_bmi, 0)
-    dataframe2['high_BMI'] = np.where(dataframe2['high_BMI'] == 1, high_BMI,
-                                      0)
-    dataframe2['over_65'] = np.where(dataframe2['over_65'] == 1, over_65,
-                                     0)
-    dataframe2['married'] = np.where(dataframe2['married'] == 1, married,
-                                     0)
-    dataframe2['residence'] = np.where(dataframe2['residence'] == 1, residence,
-                                       0)
-    dataframe3 = dataframe2.copy()
-    dataframe3.loc[:, 'row_corr'] = dataframe3.sum(axis=1) / (hypertension + heart_disease + high_glucose + low_bmi
-                                                              + high_BMI + over_65 + married + residence)
-    dataframe3 = dataframe3[['row_corr']]
-    mL_df = pd.merge(dataframe, dataframe3, left_index=True, right_index=True)
-    return mL_df
-    
+'''
 def map_risk_factors(map_data: pd.DataFrame):
     """
     Display a bubble map of the top risk factors 
@@ -141,7 +200,7 @@ def map_risk_factors(map_data: pd.DataFrame):
     #                      projection="usa")
 
     fig.show()
-
+'''
 
 def main():
     risk_factor_data = datacleanup.create_risk_factor_df(
@@ -157,18 +216,19 @@ def main():
     # print(map_data.columns)
     # print("\n================================")
 
-    us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-    print(us_map.columns)
-    hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
-    print("\n================================")
+    # us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
+    # print(us_map.columns)
+    #hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
+    # print("\n================================")
 
-    df = pd.read_csv('datasets/stroke_data_1.csv')
-    visualization_correlation_matrix(df)
-    pair_visualization(df)
+    # df = pd.read_csv('datasets/stroke_data_1.csv')
+    # visualization_correlation_matrix(df)
+    # pair_visualization(df)
     print(find_risk_factor_correlation(risk_factor_data))
+    comparison_bar_charts(risk_factor_data)
 
-    map_risk_factors(map_data)
-    print("\n================================")
+    # map_risk_factors(map_data)
+    # print("\n================================")
    
     
 
