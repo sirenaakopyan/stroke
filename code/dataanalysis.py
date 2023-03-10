@@ -259,7 +259,7 @@ def main():
     correlations = find_correlations(normalized_risk_factor)
     print(sorted_correlations(correlations))
     # print(find_risk_factor_correlation(risk_factor_data))
-    comparison_bar_charts(risk_factor_data)
+    comparison_bar_charts(normalized_risk_factor)
 
     # map_risk_factors(map_data)
     # print("\n================================")
