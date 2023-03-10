@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy.stats import chi2_contingency
+import operator
 
 def normalize_data(df):
     shuffled_data = df.sample(frac=1,random_state=4)
@@ -16,19 +17,25 @@ def normalize_data(df):
     return normalized_stroke
 
 
-def cramers_V(var1, var2):
+def cramers_V(var1:str, var2:str) -> float:
   crosstab =np.array(pd.crosstab(var1,var2, rownames=None, colnames=None)) # Cross table building
   stat = chi2_contingency(crosstab)[0] # Keeping of the test statistic of the Chi2 test
   obs = np.sum(crosstab) # Number of observations
   mini = min(crosstab.shape)-1 # Take the minimum value between the columns and the rows of the cross table
   return (stat/(obs*mini))
 
-def find_correlations(df):
+
+def find_correlations(df: pd.DataFrame):
     corr_dict = {}
     for col in df.columns:
         corr = (col, cramers_V(df[col], df['stroke']))
         corr_dict[col] = corr[1]
     return corr_dict
+
+
+def sorted_correlations(corr_dict):
+    sorted_d = dict( sorted(corr_dict.items(), key=operator.itemgetter(1),reverse=True))
+    return sorted_d
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
@@ -249,7 +256,8 @@ def main():
     # pair_visualization(df)
     normalized_risk_factor = normalize_data(risk_factor_data)
 
-    print(find_correlations(normalized_risk_factor))
+    correlations = find_correlations(normalized_risk_factor)
+    print(sorted_correlations(correlations))
     # print(find_risk_factor_correlation(risk_factor_data))
     comparison_bar_charts(risk_factor_data)
 
