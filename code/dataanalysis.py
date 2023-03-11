@@ -62,7 +62,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     over_65_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Age', labels=['Under 65', 'Over 65'])
     plt.title("Age and Stroke")
-    plt.savefig('over_65.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/over_65.png',  bbox_inches='tight')
     # plt.show()
     
     # bar chart 2: stroke vs smoking
@@ -71,7 +71,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     smoking_status_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Smoking Status', labels=['Not a Smoker', 'Smoker', 'Unknown'])
     plt.title("Smoking Status and Stroke")
-    plt.savefig('smoking_status.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/smoking_status.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart 3: stroke vs gender
@@ -80,7 +80,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     gender_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Gender', labels=['Female', 'Male'])
     plt.title("Gender and Stroke")
-    plt.savefig('gender.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/gender.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart 4: stroke vs heart disease
@@ -89,7 +89,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     heart_disease_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['did not have heart disease', 'had heart disease'])
     plt.title("Heart Disease and Stroke")
-    plt.savefig('heart_disease.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/heart_disease.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart 5: stroke vs hypertension
@@ -98,7 +98,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     hypertension_and_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['did not have hypertension', 'had hypertension'])
     plt.title("Hypertension and Stroke")
-    plt.savefig('hypertension.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/hypertension.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart 6: stroke vs married
@@ -107,7 +107,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     marital_status_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Marital Status', labels=['not married', 'married'])
     plt.title("Marital Status and Stroke")
-    plt.savefig('Marital_status.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/Marital_status.png',  bbox_inches='tight')
     # plt.show()
     # bar chart 7: stroke vs high glucose
     high_glucose_stroke = sns.countplot(x='stroke', hue = 'high_glucose', data = risk_factor_df, palette = "Set1")
@@ -115,7 +115,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     high_glucose_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['normal glucose', 'high glucose'])
     plt.title("Glucose level and Stroke")
-    plt.savefig('glucose.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/glucose.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart 8: stroke vs high BMI
@@ -124,7 +124,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     high_bmi_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['normal BMI', 'high BMI'])
     plt.title("High BMI and Stroke")
-    plt.savefig('high_bmi.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/high_bmi.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart 9: stroke vs low BMI
@@ -133,7 +133,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     low_bmi_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['normal BMI', 'low BMI'])
     plt.title("low BMI and Stroke")
-    plt.savefig('low_bmi.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/low_bmi.png',  bbox_inches='tight')
     #plt.show()
 
     # bar chart 10: stroke vs residence
@@ -142,7 +142,7 @@ def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     residence_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='residence type', labels=['rural', 'urban'])
     plt.title("Residence Type and Stroke")
-    plt.savefig('residence_type.png',  bbox_inches='tight')
+    plt.savefig('code/question1images/residence_type.png',  bbox_inches='tight')
     # plt.show()
 
     # bar chart plotting when stroke = 1 
