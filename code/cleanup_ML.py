@@ -3,19 +3,22 @@ import pandas as pd
 import numpy as np
 
 def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
-    correlations = dataanalysis.find_risk_factor_correlation(dataframe)
-    over_65 = correlations[1]
-    heart_disease = correlations[2]
-    hypertension = correlations[3]
-    married = correlations[4]
-    low_bmi = correlations[5]
-    residence = correlations[6]
-    high_BMI = correlations[7]
-    high_glucose = correlations[8]
+    correlations = dataanalysis.find_correlations(dataframe)    
+    over_65 = correlations['over_65']
+    heart_disease = correlations['heart_disease']
+    hypertension = correlations['hypertension']
+    married = correlations['married']
+    low_bmi = correlations['low_BMI']
+    residence = correlations['residence']
+    high_BMI = correlations['high_BMI']
+    high_glucose = correlations['high_glucose']
+    gender = correlations['gender']
+    residence = correlations['residence']
+    smoking_status = correlations['smoking_status']
     dataframe2 = dataframe.copy()
     dataframe2 = dataframe2[['hypertension', 'heart_disease',
                              'high_glucose','low_BMI','high_BMI', 
-                             'over_65', 'married', 'residence']]
+                             'over_65', 'married', 'residence', 'gender', 'smoking_status']]
     dataframe3 = dataframe2.apply(pd.Series.value_counts, axis=1)
     dataframe2["hypertension"] = np.where(dataframe2["hypertension"] == 1,
                                           hypertension, 0)
@@ -32,6 +35,8 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
                                      0)
     dataframe2['residence'] = np.where(dataframe2['residence'] == 1, residence,
                                        0)
+    dataframe2['gender'] = np.where(dataframe2['gender'] == 1, gender, 0)
+    dataframe2['smoking_status'] = np.where(dataframe2['smoking_status'] == 1, smoking_status, 0)
     dataframe4 = dataframe2.copy()
     dataframe4.loc[:, 'row_corr'] = dataframe2.sum(axis=1)
     dataframe4 = dataframe4[["row_corr"]]
@@ -43,6 +48,7 @@ def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
     mL_df = mL_df[["stroke", "risk_corr"]]
     mL_df = mL_df.fillna(0)
     return mL_df
+    
 
 
 

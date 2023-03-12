@@ -6,116 +6,144 @@ import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import chi2_contingency
+import operator
+
+def normalize_data(df):
+    shuffled_data = df.sample(frac=1,random_state=4)
+    stroke_df = df.loc[df['stroke'] == 1]
+    non_stroke_df = df.loc[df['stroke'] == 0].sample(n=1000, random_state=101)
+    normalized_stroke = pd.concat([stroke_df, non_stroke_df])
+    return normalized_stroke
 
 
-def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
-    '''Calculate the correlation matrix.
+def cramers_V(var1: str, var2: str) -> float:
+  crosstab =np.array(pd.crosstab(var1,var2, rownames=None, colnames=None)) # Cross table building
+  stat = chi2_contingency(crosstab)[0] # Keeping of the test statistic of the Chi2 test
+  obs = np.sum(crosstab) # Number of observations
+  mini = min(crosstab.shape)-1 # Take the minimum value between the columns and the rows of the cross table
+  return (stat/(obs*mini))
+
+
+def find_correlations(df: pd.DataFrame):
+    '''
+    Calculate the correlation matrix
+    '''
+    corr_dict = {}
+    for col in df.columns:
+        corr = (col, cramers_V(df[col], df['stroke']))
+        corr_dict[col] = corr[1]
+    return corr_dict
+
+
+def sorted_correlations(corr_dict):
+    '''
     Sort the correlation coefficients in descending order.
     Return the sorted correlation coefficients.
     '''
+    sorted_d = dict( sorted(corr_dict.items(), key=operator.itemgetter(1),reverse=True))
+    return sorted_d
+
+
+def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
+   
     corr_matrix = risk_factor_df.corr()
     stroke_corr = corr_matrix["stroke"]
     stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
     return stroke_corr_sorted
-'''
-def pair_visualization(df):
 
-    fig = plt.figure(figsize=(20,15),dpi=100)
-    sns.pairplot(data=df,hue='stroke',size=2,palette='OrRd')
-    plt.savefig('kk.png',  bbox_inches='tight')
-'''
 
 def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
-    # normalize data
-    shuffled_data = risk_factor_df.sample(frac=1,random_state=4)
-    stroke_df = risk_factor_df.loc[risk_factor_df['stroke'] == 1]
-    non_stroke_df = risk_factor_df.loc[risk_factor_df['stroke'] == 0].sample(n=1000, random_state=101)
-    normalized_stroke = pd.concat([stroke_df, non_stroke_df])
-    
-
     # bar chart 1: stroke vs age
-    over_65_stroke = sns.countplot(x='stroke', hue = 'over_65', data = normalized_stroke, palette = "Set1")
+    over_65_stroke = sns.countplot(x='stroke', hue = 'over_65', data = risk_factor_df, palette = "Set1")
     over_65_stroke.set_xticklabels(["No", "Yes"])
     over_65_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Age', labels=['Under 65', 'Over 65'])
     plt.title("Age and Stroke")
-    plt.savefig('over_65.png',  bbox_inches='tight')
+    plt.savefig('question1images/over_65.png',  bbox_inches='tight')
     # plt.show()
     
     # bar chart 2: stroke vs smoking
-    smoking_status_stroke = sns.countplot(x='stroke', hue = 'smoking_status', data = normalized_stroke, palette = "Set1")
+    smoking_status_stroke = sns.countplot(x='stroke', hue = 'smoking_status', data = risk_factor_df, palette = "Set1")
     smoking_status_stroke.set_xticklabels(["No", "Yes"])
     smoking_status_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Smoking Status', labels=['Not a Smoker', 'Smoker', 'Unknown'])
     plt.title("Smoking Status and Stroke")
-    plt.savefig('smoking_status.png',  bbox_inches='tight')
-    # plt.show()  
+    plt.savefig('question1images/smoking_status.png',  bbox_inches='tight')
+    # plt.show()
+
     # bar chart 3: stroke vs gender
-    gender_stroke = sns.countplot(x='stroke', hue = 'gender', data = normalized_stroke, palette = "Set1")
+    gender_stroke = sns.countplot(x='stroke', hue = 'gender', data = risk_factor_df, palette = "Set1")
     gender_stroke.set_xticklabels(["No", "Yes"])
     gender_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Gender', labels=['Female', 'Male'])
     plt.title("Gender and Stroke")
-    plt.savefig('gender.png',  bbox_inches='tight')
+    plt.savefig('question1images/gender.png',  bbox_inches='tight')
     # plt.show()
+
     # bar chart 4: stroke vs heart disease
-    heart_disease_stroke = sns.countplot(x='stroke', hue = 'heart_disease', data = normalized_stroke, palette = "Set1")
+    heart_disease_stroke = sns.countplot(x='stroke', hue = 'heart_disease', data = risk_factor_df, palette = "Set1")
     heart_disease_stroke.set_xticklabels(["No", "Yes"])
     heart_disease_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['did not have heart disease', 'had heart disease'])
     plt.title("Heart Disease and Stroke")
-    plt.savefig('heart_disease.png',  bbox_inches='tight')
+    plt.savefig('question1images/heart_disease.png',  bbox_inches='tight')
     # plt.show()
+
     # bar chart 5: stroke vs hypertension
-    hypertension_and_stroke = sns.countplot(x='stroke', hue = 'hypertension', data = normalized_stroke, palette = "Set1")
+    hypertension_and_stroke = sns.countplot(x='stroke', hue = 'hypertension', data = risk_factor_df, palette = "Set1")
     hypertension_and_stroke.set_xticklabels(["No", "Yes"])
     hypertension_and_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['did not have hypertension', 'had hypertension'])
     plt.title("Hypertension and Stroke")
-    plt.savefig('hypertension.png',  bbox_inches='tight')
+    plt.savefig('question1images/hypertension.png',  bbox_inches='tight')
     # plt.show()
+
     # bar chart 6: stroke vs married
-    marital_status_stroke = sns.countplot(x='stroke', hue = 'married', data = normalized_stroke, palette = "Set1")
+    marital_status_stroke = sns.countplot(x='stroke', hue = 'married', data = risk_factor_df, palette = "Set1")
     marital_status_stroke.set_xticklabels(["No", "Yes"])
     marital_status_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Marital Status', labels=['not married', 'married'])
     plt.title("Marital Status and Stroke")
-    plt.savefig('Marital_status.png',  bbox_inches='tight')
+    plt.savefig('question1images/Marital_status.png',  bbox_inches='tight')
     # plt.show()
     # bar chart 7: stroke vs high glucose
-    high_glucose_stroke = sns.countplot(x='stroke', hue = 'high_glucose', data = normalized_stroke, palette = "Set1")
+    high_glucose_stroke = sns.countplot(x='stroke', hue = 'high_glucose', data = risk_factor_df, palette = "Set1")
     high_glucose_stroke.set_xticklabels(["No", "Yes"])
     high_glucose_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['normal glucose', 'high glucose'])
     plt.title("Glucose level and Stroke")
-    plt.savefig('glucose.png',  bbox_inches='tight')
+    plt.savefig('question1images/glucose.png',  bbox_inches='tight')
     # plt.show()
+
     # bar chart 8: stroke vs high BMI
-    high_bmi_stroke = sns.countplot(x='stroke', hue = 'high_BMI', data = normalized_stroke, palette = "Set1")
+    high_bmi_stroke = sns.countplot(x='stroke', hue = 'high_BMI', data = risk_factor_df, palette = "Set1")
     high_bmi_stroke.set_xticklabels(["No", "Yes"])
     high_bmi_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['normal BMI', 'high BMI'])
     plt.title("High BMI and Stroke")
-    plt.savefig('high_bmi.png',  bbox_inches='tight')
+    plt.savefig('question1images/high_bmi.png',  bbox_inches='tight')
     # plt.show()
+
     # bar chart 9: stroke vs low BMI
-    low_bmi_stroke = sns.countplot(x='stroke', hue = 'low_BMI', data = normalized_stroke, palette = "Set1")
+    low_bmi_stroke = sns.countplot(x='stroke', hue = 'low_BMI', data = risk_factor_df, palette = "Set1")
     low_bmi_stroke.set_xticklabels(["No", "Yes"])
     low_bmi_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='Status', labels=['normal BMI', 'low BMI'])
     plt.title("low BMI and Stroke")
-    plt.savefig('low_bmi.png',  bbox_inches='tight')
+    plt.savefig('question1images/low_bmi.png',  bbox_inches='tight')
     #plt.show()
+
     # bar chart 10: stroke vs residence
-    residence_stroke = sns.countplot(x='stroke', hue = 'residence', data = normalized_stroke, palette = "Set1")
+    residence_stroke = sns.countplot(x='stroke', hue = 'residence', data = risk_factor_df, palette = "Set1")
     residence_stroke.set_xticklabels(["No", "Yes"])
     residence_stroke.set(xlabel = 'Had Stroke', ylabel = 'Count')
     plt.legend(title='residence type', labels=['rural', 'urban'])
     plt.title("Residence Type and Stroke")
-    plt.savefig('residence_type.png',  bbox_inches='tight')
+    plt.savefig('question1images/residence_type.png',  bbox_inches='tight')
     # plt.show()
 
-    # bar chart plotting all 
+    # bar chart plotting when stroke = 1 
 
 
 '''
@@ -224,8 +252,12 @@ def main():
     # df = pd.read_csv('datasets/stroke_data_1.csv')
     # visualization_correlation_matrix(df)
     # pair_visualization(df)
-    print(find_risk_factor_correlation(risk_factor_data))
-    comparison_bar_charts(risk_factor_data)
+    normalized_risk_factor = normalize_data(risk_factor_data)
+
+    correlations = find_correlations(normalized_risk_factor)
+    print(sorted_correlations(correlations))
+    # print(find_risk_factor_correlation(risk_factor_data))
+    comparison_bar_charts(normalized_risk_factor)
 
     # map_risk_factors(map_data)
     # print("\n================================")
