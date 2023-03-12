@@ -17,7 +17,7 @@ def normalize_data(df):
     return normalized_stroke
 
 
-def cramers_V(var1:str, var2:str) -> float:
+def cramers_V(var1: str, var2: str) -> float:
   crosstab =np.array(pd.crosstab(var1,var2, rownames=None, colnames=None)) # Cross table building
   stat = chi2_contingency(crosstab)[0] # Keeping of the test statistic of the Chi2 test
   obs = np.sum(crosstab) # Number of observations
@@ -26,6 +26,9 @@ def cramers_V(var1:str, var2:str) -> float:
 
 
 def find_correlations(df: pd.DataFrame):
+    '''
+    Calculate the correlation matrix
+    '''
     corr_dict = {}
     for col in df.columns:
         corr = (col, cramers_V(df[col], df['stroke']))
@@ -34,26 +37,21 @@ def find_correlations(df: pd.DataFrame):
 
 
 def sorted_correlations(corr_dict):
+    '''
+    Sort the correlation coefficients in descending order.
+    Return the sorted correlation coefficients.
+    '''
     sorted_d = dict( sorted(corr_dict.items(), key=operator.itemgetter(1),reverse=True))
     return sorted_d
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
-    '''Calculate the correlation matrix.
-    Sort the correlation coefficients in descending order.
-    Return the sorted correlation coefficients.
-    '''
+   
     corr_matrix = risk_factor_df.corr()
     stroke_corr = corr_matrix["stroke"]
     stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
     return stroke_corr_sorted
-'''
-def pair_visualization(df):
 
-    fig = plt.figure(figsize=(20,15),dpi=100)
-    sns.pairplot(data=df,hue='stroke',size=2,palette='OrRd')
-    plt.savefig('kk.png',  bbox_inches='tight')
-'''
 
 def comparison_bar_charts(risk_factor_df: pd. DataFrame) -> None:
     # bar chart 1: stroke vs age
