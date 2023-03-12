@@ -9,6 +9,12 @@ from sklearn.model_selection import train_test_split
 
 
 def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
+    '''
+    create a logistic regression model to predict occurrence
+    of stroke. Train the model and test it by splitting the
+    dataframe into training and testing. Determine accuracy of model
+    through a confusion matrix and accuracy.
+    '''
     # features is the risk_row_corr
     features = ml_df.drop('stroke', axis=1)
     # label is stroke, which we want to predict
@@ -27,6 +33,9 @@ def fit_and_predit_stroke(ml_df: pd.DataFrame) -> list:
 
 
 def plot_confusion_matrix(cm: list) -> None:
+    '''
+    plot the results from the confusion matrix
+    '''
     fig, ax = plt.subplots(figsize=(8, 8))
     ax.imshow(cm)
     ax.grid(False)

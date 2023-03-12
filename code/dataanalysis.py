@@ -112,6 +112,11 @@ def plot_correlation(df):
 
 
 def normalize_data(df):
+    '''
+    Since there are many observations of no stroke compared to stroke,
+    we return normalized data by shuffling the data and reducing the
+    number of no stroke data to 1000.
+    '''
     shuffled_data = df.sample(frac=1, random_state=4)
     stroke_df = shuffled_data.loc[shuffled_data['stroke'] == 1]
     non_stroke_df = df.loc[df['stroke'] == 0].sample(n=1000, random_state=101)
@@ -120,6 +125,9 @@ def normalize_data(df):
 
 
 def cramers_V(var1: str, var2: str) -> float:
+    '''
+    returns the correlation between 2 binary observations
+    '''
     # Cross table building
     crosstab = np.array(pd.crosstab(var1, var2, rownames=None, colnames=None))
     # Keeping of the test statistic of the Chi2 test
@@ -132,7 +140,7 @@ def cramers_V(var1: str, var2: str) -> float:
     return (stat/(obs*mini))
 
 
-def find_correlations(df: pd.DataFrame):
+def find_correlations(df: pd.DataFrame) -> dict[str, float]:
     '''
     Calculate the correlation matrix
     '''
@@ -143,7 +151,7 @@ def find_correlations(df: pd.DataFrame):
     return corr_dict
 
 
-def sorted_correlations(corr_dict):
+def sorted_correlations(corr_dict: dict[str, float]) -> dict[str, float]:
     '''
     Sort the correlation coefficients in descending order.
     Return the sorted correlation coefficients.

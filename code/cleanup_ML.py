@@ -2,6 +2,10 @@ import pandas as pd
 
 
 def risk_factor_df_ML(dataframe: str) -> pd.DataFrame:
+    '''
+    generate dataframe by only keeping rows for each column
+    that are binary
+    '''
 
     over_65 = (dataframe.over_65 == 0) | (dataframe.over_65 == 1)
     gender = (dataframe.gender == 0) | (dataframe.gender == 1)
