@@ -157,13 +157,6 @@ def main():
         "datasets/State_code_to_name.csv",
         "datasets/stroke_mortality_state.csv")  
     # print("\n================================")       
-    # print(map_data.columns)
-    # print("\n================================")
-
-    # us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-    # print(us_map.columns)
-    #hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
-    # print("\n================================")
 
 
     # data summary
@@ -183,18 +176,13 @@ def main():
     plot_historgram_with_cate(df, "question1Images", "age")
     plot_correlation(df)
 
-    # visualization_correlation_matrix(df)
+
     # pair_visualization(df)
     normalized_risk_factor = normalize_data(risk_factor_data)
 
     correlations = find_correlations(normalized_risk_factor)
     print(sorted_correlations(correlations))
-    # print(find_risk_factor_correlation(risk_factor_data))
-    comparison_bar_charts(normalized_risk_factor)
 
-    # map_risk_factors(map_data)
-    # print("\n================================")
-   
 
 if __name__ == '__main__':
     main()
