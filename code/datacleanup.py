@@ -40,19 +40,25 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     cleaned_BMI = cleaned_smoking.copy()
     cleaned_BMI['low_BMI'] = np.where(cleaned_BMI['bmi'] < 18.5, 1, 0)
     cleaned_BMI['high_BMI'] = np.where((cleaned_BMI['bmi'] >= 18.5) &
-                                       (cleaned_BMI['bmi'] <= 24.9), 0, 
-                                np.where((cleaned_BMI['bmi'] >= 25) & 
-                                        (cleaned_BMI['bmi'] <= 29.9), 1, 0))
+                                       (cleaned_BMI['bmi'] <= 24.9), 0,
+                                       np.where((cleaned_BMI['bmi'] >= 25) &
+                                                (cleaned_BMI['bmi'] <= 29.9),
+                                                1, 0))
     cleaned_glucose = cleaned_BMI.copy()
-    cleaned_glucose['high_glucose'] = np.where((cleaned_glucose['avg_glucose_level']
-                                                <= 99.9),0,
-                                                np.where((cleaned_glucose['avg_glucose_level']
-                                                          > 100.001),
-                                                         1, cleaned_glucose['avg_glucose_level'])).astype(int)
+    cleaned_glucose['high_glucose'] = np.where((cleaned_glucose
+                                                ['avg_glucose_level']
+                                                <= 99.9), 0,
+                                               np.where((cleaned_glucose
+                                                         ['avg_glucose_level']
+                                                         > 100.001),
+                                                        1, cleaned_glucose
+                                                        ['avg_glucose_level']
+                                                        )).astype(int)
     cleaned_age = cleaned_glucose.copy()
     cleaned_age['over_65'] = np.where((cleaned_age['age'] <= 64),
-                                                0, np.where((cleaned_age['age'] >= 65),
-                                                            1, cleaned_age['age'])).astype(int)
+                                      0, np.where((cleaned_age['age'] >= 65),
+                                                  1, cleaned_age['age']
+                                                  )).astype(int)
     cleaned_residence = cleaned_age.copy()
     cleaned_residence.loc[cleaned_residence["Residence_type"]
                           == "Urban", "residence"] = 1
@@ -60,16 +66,20 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
                           == "Rural", "residence"] = 0
     cleaned_married = cleaned_residence.copy()
     cleaned_married.loc[cleaned_married["ever_married"]
-                      == "Yes", "married"] = 1
+                        == "Yes", "married"] = 1
     cleaned_married.loc[cleaned_married["ever_married"]
-                      == "No", "married"] = 0
-    final_df = cleaned_married[['hypertension', 'heart_disease', 'high_glucose', 'low_BMI',
-                        'high_BMI','gender', 'over_65', 'married',
-                        'residence', 'smoking_status', 'stroke']]
+                        == "No", "married"] = 0
+    final_df = cleaned_married[['hypertension', 'heart_disease',
+                                'high_glucose', 'low_BMI',
+                                'high_BMI', 'gender', 'over_65', 'married',
+                                'residence', 'smoking_status', 'stroke']]
     return final_df
 
-def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: str, 
-                                    diabetes: str,abbr: str, stroke:str) -> gpd.GeoDataFrame:
+
+def create_shapefile_for_bubble_map(shapefile: str, hypertension: str,
+                                    obesity: str,
+                                    diabetes: str, abbr: str,
+                                    stroke: str) -> gpd.GeoDataFrame:
     '''
     Question 2:
 
@@ -82,12 +92,12 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     Combine on state
     Find dataset
     on map of strokes
-    Plotly bubble map to layer map of strokes over map of each health risk factor
+    Plotly bubble map to layer map of strokes over map of each health risk
+    factor
     '''
     # create shapefile for geometry and state name
     us_shapefile = gpd.read_file(shapefile)
     us_shapefile = us_shapefile.rename(columns={'NAME': 'State'})
-
 
     # hypertension by state
     hypertension_state = pd.read_excel(hypertension, engine='openpyxl')
@@ -109,7 +119,8 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
         'state_abbr', as_index=False).mean()
     diabetes_state = state_abbr.merge(
         raw_diabetes_state, left_on='code', right_on='state_abbr', how='outer')
-    diabetes_state = diabetes_state[diabetes_state['state'] != 'Virgin Islands']
+    diabetes_state = diabetes_state[diabetes_state['state']
+                                    != 'Virgin Islands']
     diabetes_state = diabetes_state[["state", "value"]]
     diabetes_state = diabetes_state.rename(
         columns={'value': 'Diabetes_prev_perc', 'state': 'State'})
@@ -119,30 +130,31 @@ def create_shapefile_for_bubble_map(shapefile: str, hypertension: str, obesity: 
     year_2020 = stroke_mortality_df["YEAR"] == 2020
     stroke_mortality_df = stroke_mortality_df[year_2020]
     stroke_mortality_df = stroke_mortality_df[stroke_mortality_df['STATE']
-                                            != 'Virgin Islands']
+                                              != 'Virgin Islands']
     stroke_mortality_df = stroke_mortality_df[["STATE", "RATE"]]
     stroke_mortality_df = state_abbr.merge(
         stroke_mortality_df, left_on='code', right_on='STATE', how='outer')
     stroke_mortality_df = stroke_mortality_df[stroke_mortality_df['state']
-                                            != 'Virgin Islands']
+                                              != 'Virgin Islands']
     stroke_mortality_df = stroke_mortality_df[["state", "RATE"]]
     stroke_mortality_df = stroke_mortality_df.rename(
         columns={'RATE': 'stroke_mortality_rate', 'state': 'State'})
 
     # combine datasets
     dataframes_to_merge = [hypertension_state,
-                        obesity_state, diabetes_state, stroke_mortality_df]
+                           obesity_state, diabetes_state,
+                           stroke_mortality_df]
     merged_risk_factors = reduce(lambda left, right: pd.merge(
         left, right, on=['State'], how='outer'), dataframes_to_merge)
-
-
+    # list of state codes to exclude
     excluded_states = ['United States Virgin Islands',
-                       'Commonwealth of the Northern Mariana Islands', 'Guam', 'American Samoa', 'District of Columbia', 'Puerto Rico']  # list of state codes to exclude
+                       'Commonwealth of the Northern Mariana Islands',
+                       'Guam', 'American Samoa', 'District of Columbia',
+                       'Puerto Rico']
     us_shapefile = us_shapefile[~us_shapefile['State'].isin(excluded_states)]
-    merged_risk_factors = merged_risk_factors[~merged_risk_factors['State'].isin(
+    merged_risk_factors = merged_risk_factors
+    [~merged_risk_factors['State'].isin(
         excluded_states)]
-
     risk_factors_and_stroke_df = us_shapefile.merge(
         merged_risk_factors, left_on='State', right_on='State', how='inner')
-    
     return risk_factors_and_stroke_df
