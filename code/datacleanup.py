@@ -7,11 +7,8 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 from functools import reduce
-<<<<<<< HEAD
 import dataanalysis
 
-=======
->>>>>>> eaf87d5dbd3bd5c16f7665b57e9f4bf0320b74bf
 
 
 def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
@@ -80,10 +77,6 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
                                 'residence', 'smoking_status', 'stroke']]
     return final_df
 
-<<<<<<< HEAD
-
-=======
->>>>>>> eaf87d5dbd3bd5c16f7665b57e9f4bf0320b74bf
 
 def create_shapefile_for_bubble_map(shapefile: str, hypertension: str,
                                     obesity: str,

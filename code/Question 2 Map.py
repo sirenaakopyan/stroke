@@ -1,3 +1,19 @@
+"""
+Question 2.
+Research Questions: 
+
+1. What is the prevalence of diabetes, hypertension, and obesity in different 
+states across the US?
+
+2. Is there a correlation between the prevalence of these risk factors and 
+stroke mortality rates in each state?
+
+
+This code defines three functions that display bubble maps of hypertension, 
+obesity, and diabetes rates across the United States over a choropleth map
+colored by stroke mortality rates.
+"""
+
 import datacleanup
 import pandas as pd
 import numpy as np
@@ -10,12 +26,18 @@ import plotly.subplots as sp
 
 def map_hypertension(map_data: pd.DataFrame):
     """
-    Display a bubble map of the top risk factors 
-    across the country.
-    """
+    Displays a bubble map of the hypertension rates across the 
+    country over a choropleth map that is colored by stroke mortality
+    rates.
 
-    # print(map_data)
-    # print(map_data.columns)
+    Parameters:
+    map_data (pd.DataFrame): A pandas DataFrame containing the data 
+    to be plotted. It should include columns for state abbreviation, 
+    stroke mortality rate, and percent with hypertension.
+
+    Returns:
+    None
+    """
 
     fig = go.Figure()
 
@@ -103,8 +125,17 @@ def map_hypertension(map_data: pd.DataFrame):
 
 def map_obesity(map_data: pd.DataFrame):
     """
-    Display a bubble map of the top risk factors 
-    across the country.
+    Displays a bubble map of the obesity rates across the 
+    country over a choropleth map that is colored by stroke mortality
+    rates.
+
+    Parameters:
+    map_data (pd.DataFrame): A pandas DataFrame containing the data 
+    to be plotted. It should include columns for state abbreviation, 
+    stroke mortality rate, and percent with obesity.
+
+    Returns:
+    None
     """
 
     print(map_data)
@@ -119,7 +150,7 @@ def map_obesity(map_data: pd.DataFrame):
     ob_map_data = ob_map_data.dropna(subset=['Obesity_prev_perc'])
 
 
-    # Define a variable for percent with hypertension
+    # Define a variable for percent with obesity
     percent_with_obesity = (
         ob_map_data['Obesity_prev_perc']).round(2)
 
@@ -199,8 +230,17 @@ def map_obesity(map_data: pd.DataFrame):
 
 def map_diabetes(map_data: pd.DataFrame):
     """
-    Display a bubble map of the top risk factors 
-    across the country.
+    Displays a bubble map of the diabetes rates across the 
+    country over a choropleth map that is colored by stroke mortality
+    rates.
+
+    Parameters:
+    map_data (pd.DataFrame): A pandas DataFrame containing the data 
+    to be plotted. It should include columns for state abbreviation, 
+    stroke mortality rate, and percent with diabetes.
+
+    Returns:
+    None
     """
 
     print(map_data)
@@ -300,9 +340,10 @@ def main():
         "datasets/Diabetes_by_state.csv",
         "datasets/State_code_to_name.csv",
         "datasets/stroke_mortality_state.csv")
-    #map_hypertension(map_data)
-    #map_obesity(map_data)
+    map_hypertension(map_data)
+    map_obesity(map_data)
     map_diabetes(map_data)
+
 
 if __name__ == '__main__':
     main()
