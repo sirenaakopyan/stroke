@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 from functools import reduce
-<<<<<<< HEAD
 import dataanalysis
 
 
@@ -71,8 +70,6 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
                         'residence', 'smoking_status', 'stroke']]
     return final_df
 
-=======
->>>>>>> 65979af461aadc6ea3c3c7062c56f53e602f1e8a
 
 
 def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
