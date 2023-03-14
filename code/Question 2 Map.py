@@ -1,13 +1,9 @@
 """
 Question 2.
-Research Questions: 
-
-1. What is the prevalence of diabetes, hypertension, and obesity in different 
-states across the US?
-
-2. Is there a correlation between the prevalence of these risk factors and 
-stroke mortality rates in each state?
-
+Research Question: 
+ 
+Is there a correlation between the prevalence of 
+risk factors and stroke mortality rates across the United States?
 
 This code defines three functions that display bubble maps of hypertension, 
 obesity, and diabetes rates across the United States over a choropleth map
