@@ -6,6 +6,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import datacleanup
 from scipy.stats import pearsonr
 
 # getting current directory
@@ -17,7 +18,6 @@ parent = os.path.dirname(current)
 # the sys.path.
 sys.path.append(parent)
 # import the module with relative path
-import datacleanup
 
 
 def test_create_risk_factor_df():
