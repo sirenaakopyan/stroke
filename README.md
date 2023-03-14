@@ -14,7 +14,7 @@ Nearly 800,000 people in the United States suffer from a stroke each year, with 
 
 ## Instructions to run project and reproduce results
 
-In order to run the project, please install all dependecies by command 'py -m pip install dependecies.txt`
+In order to run the project, please install all dependecies by command `py -m pip install dependecies.txt`
 
 ### Question 1:
 After installing all independecies, to get all the result graph for research question 1, navigate to the file `dataanalysis.py`. From here, run the file and all the graph will be save in the `question1Images`. The summary statistic and graph from the dataset will also be saved in the directory `dataSummary`.
