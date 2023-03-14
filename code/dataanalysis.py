@@ -60,6 +60,19 @@ def plot_missing_data(df, dir: str):
     plt.clf()
 
 
+def plot_relating_cate(df, dir, cate1, cate2):
+    stroke = df[df["stroke"] == 1]
+    no_stroke = df[df["stroke"] == 0]
+    fig, [ax1, ax2] = plt.subplots(1, 2, figsize=(8, 8))  # set figure size to (8, 10)
+    plt.subplots_adjust(hspace=0.4)  # add vertical spacing between subplots
+    sns.scatterplot(data=stroke, x=cate1, y=cate2, ax=ax1)
+    sns.scatterplot(data=no_stroke, x=cate1, y=cate2, ax=ax2)
+    ax1.set_title("Stroke Patients")
+    ax2.set_title("Non-Stroke Patients")
+    plt.savefig(dir + "/scatter_" + cate1 + cate2 + ".png")
+    plt.clf()
+
+
 def plot_historgram_with_cate(df, dir, cate):
     """
     Method to plot a histogram based on a categorical feature with strokes as the target variable
@@ -357,6 +370,9 @@ def main():
     df = pd.read_csv("datasets/stroke_data_1.csv")
     print(df.columns)
     data_set_exploration(df, dir="dataSummary")
+    plot_relating_cate(df, "question1Images", "age", "hypertension")
+    plot_relating_cate(df, "question1Images", "age", "bmi")
+    plot_relating_cate(df, "question1Images", "age", "heart_disease")
 
     # Distribution for numerical value
     for column in ["age", "hypertension", "heart_disease", "avg_glucose_level", "bmi"]:
