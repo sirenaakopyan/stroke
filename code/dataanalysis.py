@@ -61,6 +61,9 @@ def plot_missing_data(df, dir: str):
 
 
 def plot_relating_cate(df, dir, cate1, cate2):
+    """
+    This function will plot the scatterplot between two variable group by whether having stroke or not
+    """
     stroke = df[df["stroke"] == 1]
     no_stroke = df[df["stroke"] == 0]
     fig, [ax1, ax2] = plt.subplots(1, 2, figsize=(8, 8))  # set figure size to (8, 10)
@@ -228,6 +231,9 @@ def sorted_correlations(corr_dict: Dict[str, float]) -> Dict[str, float]:
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
+    """
+    Function to find correlation in sorted order for risk df
+    """
     corr_matrix = risk_factor_df.corr()
     stroke_corr = corr_matrix["stroke"]
     stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
@@ -373,6 +379,7 @@ def main():
     plot_relating_cate(df, "question1Images", "age", "hypertension")
     plot_relating_cate(df, "question1Images", "age", "bmi")
     plot_relating_cate(df, "question1Images", "age", "heart_disease")
+    plot_relating_cate(df, "question1Images", "hypertension", "heart_disease")
 
     # Distribution for numerical value
     for column in ["age", "hypertension", "heart_disease", "avg_glucose_level", "bmi"]:
