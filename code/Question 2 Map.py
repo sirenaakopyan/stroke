@@ -42,7 +42,6 @@ def map_hypertension(map_data: pd.DataFrame):
 
     percent_with_hypertension = (
         hyp_map_data['Percent_with_hypertension']).round(2)
-    # Define a variable for percent with hypertension
     percent_with_hypertension = (hyp_map_data["Percent_with_hypertension"]).round(2)
 
     fig.add_trace(
@@ -93,12 +92,10 @@ def map_hypertension(map_data: pd.DataFrame):
             marker_line_color="white",
             marker_line_width=0.5,
             colorbar_title="Stroke Mortality Rate",
-            # Use the percent_with_hypertension variable in the hovertemplate
             hovertemplate="%{text}<br>"
             + "Hypertension Rate: %{customdata:.2f}%<br>"
             + "Stroke Mortality Rate: %{z:.2f}%<br>"
             + "<extra></extra>",
-            # Use the percent_with_hypertension variable as customdata
             customdata=percent_with_hypertension,
             text=map_data["State"],
         )
@@ -153,7 +150,6 @@ def map_obesity(map_data: pd.DataFrame):
     )
     ob_map_data = ob_map_data.dropna(subset=["Obesity_prev_perc"])
 
-    # Define a variable for percent with obesity
     percent_with_obesity = (ob_map_data["Obesity_prev_perc"]).round(2)
 
     fig.add_trace(
@@ -204,12 +200,10 @@ def map_obesity(map_data: pd.DataFrame):
             marker_line_color="white",
             marker_line_width=0.5,
             colorbar_title="Stroke Mortality Rate",
-            # Use the percent_with_obesity variable in the hovertemplate
             hovertemplate="%{text}<br>"
             + "Obesity Rate: %{customdata:.2f}%<br>"
             + "Stroke Mortality Rate: %{z:.2f}%<br>"
             + "<extra></extra>",
-            # Use the percent_with_obesity variable as customdata
             customdata=percent_with_obesity,
             text=map_data["State"],
         )
@@ -272,7 +266,6 @@ def map_diabetes(map_data: pd.DataFrame):
 
     percent_with_diabetes = (
         di_map_data['Diabetes_prev_perc'] * 100).round(2)
-    # Define a variable for percent with diabetes
     percent_with_diabetes = (di_map_data["Diabetes_prev_perc"] * 100).round(2)
 
     fig.add_trace(
@@ -323,12 +316,10 @@ def map_diabetes(map_data: pd.DataFrame):
             marker_line_color="white",
             marker_line_width=0.5,
             colorbar_title="Stroke Mortality Rate",
-            # Use the percent_with_diabetes variable in the hovertemplate
             hovertemplate="%{text}<br>"
             + "Diabetes Rate: %{customdata:.2f}%<br>"
             + "Stroke Mortality Rate: %{z:.2f}%<br>"
             + "<extra></extra>",
-            # Use the percent_with_diabetes variable as customdata
             customdata=percent_with_diabetes,
             text=map_data["State"],
         )
