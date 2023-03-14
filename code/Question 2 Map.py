@@ -223,7 +223,7 @@ def map_obesity(map_data: pd.DataFrame):
             orientation="h",
             title={
                 "text": "My Legend Title",
-                "font": {"family": "Times New Roman", 
+                "font": {"family": "Times New Roman",
                          "size": 18, "color": "red"},
             },
             font=dict(family="Courier", size=22, color="black"),
@@ -341,7 +341,7 @@ def map_diabetes(map_data: pd.DataFrame):
             orientation="h",
             title={
                 "text": "My Legend Title",
-                "font": {"family": "Times New Roman", 
+                "font": {"family": "Times New Roman",
                          "size": 18, "color": "black"},
             },
             font=dict(family="Times New Roman", size=22, color="black"),

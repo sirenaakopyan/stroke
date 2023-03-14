@@ -4,6 +4,7 @@ function for data analysis, exploration, and visualization.
 """
 import sys
 import os
+import dataanalysis
 from utilsTest import create_sample_testing_df
 
 
@@ -16,7 +17,6 @@ parent = os.path.dirname(current)
 # the sys.path.
 sys.path.append(parent)
 # import the module with relative path
-import dataanalysis
 
 # Output directory for testing graph
 TEST_DIR = "code/test/testGraphOutput"
