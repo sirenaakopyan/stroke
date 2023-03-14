@@ -7,8 +7,6 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 from functools import reduce
-
-
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
@@ -35,7 +33,8 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     cleaned_gender.loc[cleaned_gender["gender"] == "Female", "gender"] = 0
     cleaned_smoking = cleaned_gender.copy()
     cleaned_smoking.loc[
-        cleaned_smoking["smoking_status"] == "formerly smoked", "smoking_status"
+        cleaned_smoking["smoking_status"] == "formerly smoked",
+        "smoking_status"
     ] = 1
     cleaned_smoking.loc[
         cleaned_smoking["smoking_status"] == "smokes", "smoking_status"
@@ -48,7 +47,8 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
     cleaned_BMI["high_BMI"] = np.where(
         (cleaned_BMI["bmi"] >= 18.5) & (cleaned_BMI["bmi"] <= 24.9),
         0,
-        np.where((cleaned_BMI["bmi"] >= 25) & (cleaned_BMI["bmi"] <= 29.9), 1, 0),
+        np.where((cleaned_BMI["bmi"] >= 25) & (cleaned_BMI["bmi"] <= 29.9),
+                 1, 0),
     )
     cleaned_glucose = cleaned_BMI.copy()
     cleaned_glucose["high_glucose"] = np.where(
@@ -74,7 +74,8 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
         cleaned_residence["Residence_type"] == "Rural", "residence"
     ] = 0
     cleaned_married = cleaned_residence.copy()
-    cleaned_married.loc[cleaned_married["ever_married"] == "Yes", "married"] = 1
+    cleaned_married.loc[cleaned_married["ever_married"] == "Yes", "married"]\
+        = 1
     cleaned_married.loc[cleaned_married["ever_married"] == "No", "married"] = 0
     final_df = cleaned_married[
         [
@@ -144,17 +145,20 @@ def create_shapefile_for_bubble_map(
     obesity_state = pd.read_csv(obesity)
     obesity_state = obesity_state[obesity_state["State"] != "Virgin Islands"]
     obesity_state = obesity_state[["State", "Prevalence"]]
-    obesity_state = obesity_state.rename(columns={"Prevalence": "Obesity_prev_perc"})
+    obesity_state = obesity_state.rename(columns={"Prevalence": 
+                                                  "Obesity_prev_perc"})
 
     # high-glucose (Diabetes by state)
     raw_diabetes_state = pd.read_csv(diabetes)
     state_abbr = pd.read_csv(abbr)
     state_abbr = state_abbr[["code", "state"]]
-    raw_diabetes_state = raw_diabetes_state.groupby("state_abbr", as_index=False).mean()
+    raw_diabetes_state = raw_diabetes_state.groupby("state_abbr",
+                                                    as_index=False).mean()
     diabetes_state = state_abbr.merge(
         raw_diabetes_state, left_on="code", right_on="state_abbr", how="outer"
     )
-    diabetes_state = diabetes_state[diabetes_state["state"] != "Virgin Islands"]
+    diabetes_state = diabetes_state[diabetes_state["state"] 
+                                    != "Virgin Islands"]
     diabetes_state = diabetes_state[["state", "value"]]
     diabetes_state = diabetes_state.rename(
         columns={"value": "Diabetes_prev_perc", "state": "State"}
