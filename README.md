@@ -4,8 +4,8 @@ Group Members: Khanh Bui, Keerthi Renduchintala, Sirena Akopyan
 ## Summary of  of research questions
 ### What are the 3 dominant factors that increase the likelihood of having a stroke?
 - We will investigate what factors have the highest correlation with stroke
-### Does having more than 1 risk factor impact how likely one is to have a stroke? ( Measure the rate)
-- We will investigate how the percentage of strokes for the combinations of risk factors change
+### Is there a correlation between the prevalence of risk factors and stroke mortality rates across the United States?
+- We will investigate how the percentage of risk factors compare to stroke mortality rates across the United States.
 ### Can we predict if someone is going to have a stroke given the presence of risk factors? 
 - We will investigate if we can build a machine learning model to predict if someone will have a stroke.
 
@@ -20,6 +20,7 @@ In order to run the project, please install all dependecies by command `py -m pi
 After installing all independecies, to get all the result graph for research question 1, navigate to the file `dataanalysis.py`. From here, run the file and all the graph will be save in the `question1Images`. The summary statistic and graph from the dataset will also be saved in the directory `dataSummary`.
 
 ### Question 2:
+Open the file "Question 2 Map" to retrieve the results for Question 2. Make sure that all necessary libraries are installed. Open the browser you would like your graphs to open on. Go back to the file and run it. The program should then open three tabs with different interactive graphs. 
 
 ### Question 3:
 In order to return the results for our third research question, open the file ML_and_visualization.py. When this file is run, the ML_confusion_matrix image will be saved and can be viewed. This will also return information on accuracy of the model.
