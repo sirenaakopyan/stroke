@@ -8,6 +8,7 @@ import numpy as np
 import geopandas as gpd
 from functools import reduce
 
+
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 
@@ -94,7 +95,8 @@ def create_risk_factor_df(stroke_data: str) -> pd.DataFrame:
 
 
 def data_transformation_correlation(df):
-    # feature log transformations (since data is skewed -> transform back to normal distribution, would not affect the correlation)
+    # feature log transformations (since data is skewed -> transform back to
+    # normal distribution, would not affect the correlation)
     # df.fillna(29, inplace = True)
     df["age"] = df["age"].apply(lambda x: np.log(x + 10) * 3)
     df["avg_glucose_level"] = df["avg_glucose_level"].apply(
@@ -125,18 +127,8 @@ def create_shapefile_for_bubble_map(
     stroke: str,
 ) -> gpd.GeoDataFrame:
     """
-    Question 2:
-
-    Since we see Heart Disease has highest correlation with stroke
-    map different heart disease/stroke risk factors
-    Find datasets
-    on hypertension, geography, state, and population size
-    high BMI (obesity), geography,state, and population size
-    on High glucose (diabetes), geography,state and population size
-    Combine on state
-    Find dataset
-    on map of strokes
-    Plotly bubble map to layer map of strokes over map of each health risk factor
+    Plotly bubble map to layer map of strokes over map of each health risk
+    factor
     """
     # create shapefile for geometry and state name
     us_shapefile = gpd.read_file(shapefile)

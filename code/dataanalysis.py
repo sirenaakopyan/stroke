@@ -2,6 +2,7 @@
 This file defines test suites for the datacleanup module, which contains
 function for data import and transformation.
 """
+from typing import Dict
 import datacleanup
 import pandas as pd
 import numpy as np
@@ -165,32 +166,37 @@ def plot_correlation(df, dir: str):
 
 
 def normalize_data(df):
+    """
+    Since there are many observations of no stroke compared to stroke,
+    we return normalized data by shuffling the data and reducing the
+    number of no stroke data to 1000.
+    """
     shuffled_data = df.sample(frac=1, random_state=4)
-    stroke_df = df.loc[df["stroke"] == 1]
+    stroke_df = shuffled_data.loc[shuffled_data["stroke"] == 1]
     non_stroke_df = df.loc[df["stroke"] == 0].sample(n=1000, random_state=101)
     normalized_stroke = pd.concat([stroke_df, non_stroke_df])
     return normalized_stroke
 
 
 def cramers_V(var1: str, var2: str) -> float:
-    crosstab = np.array(
-        pd.crosstab(var1, var2, rownames=None, colnames=None)
-    )  # Cross table building
-    stat = chi2_contingency(crosstab)[
-        0
-    ]  # Keeping of the test statistic of the Chi2 test
-    obs = np.sum(crosstab)  # Number of observations
-    mini = (
-        min(crosstab.shape) - 1
-    )  # Take the minimum value between the columns and the rows of the cross table
+    """
+    returns the correlation between 2 binary observations
+    """
+    # Cross table building
+    crosstab = np.array(pd.crosstab(var1, var2, rownames=None, colnames=None))
+    # Keeping of the test statistic of the Chi2 test
+    stat = chi2_contingency(crosstab)[0]
+    # Number of observations
+    obs = np.sum(crosstab)
+    # Take the minimum value between the columns and
+    # the rows of the cross table
+    mini = min(crosstab.shape) - 1
     return stat / (obs * mini)
 
 
-def find_correlations(df: pd.DataFrame):
+def find_correlations(df: pd.DataFrame) -> Dict[str, float]:
     """
-    This function calculates the correlation coefficient between each column in the given Pandas DataFrame and
-    the 'stroke' column using the Cramer's V measure. The result is returned as a dictionary with column names as
-    keys and corresponding correlation coefficients as values.
+    Calculate the correlation matrix
     """
     corr_dict = {}
     for col in df.columns:
@@ -199,21 +205,16 @@ def find_correlations(df: pd.DataFrame):
     return corr_dict
 
 
-def sorted_correlations(corr_dict):
+def sorted_correlations(corr_dict: Dict[str, float]) -> Dict[str, float]:
     """
-    This function takes a dictionary of correlation coefficients and sorts
-    them in descending order.
+    Sort the correlation coefficients in descending order.
+    Return the sorted correlation coefficients.
     """
     sorted_d = dict(sorted(corr_dict.items(), key=operator.itemgetter(1), reverse=True))
     return sorted_d
 
 
 def find_risk_factor_correlation(risk_factor_df: pd.DataFrame) -> float:
-    """
-    Calculate the correlation matrix.
-    Sort the correlation coefficients in descending order.
-    Return the sorted correlation coefficients.
-    """
     corr_matrix = risk_factor_df.corr()
     stroke_corr = corr_matrix["stroke"]
     stroke_corr_sorted = stroke_corr.abs().sort_values(ascending=False)
@@ -349,64 +350,9 @@ def comparison_bar_charts(risk_factor_df: pd.DataFrame) -> None:
     # bar chart plotting when stroke = 1
 
 
-'''
-def map_risk_factors(map_data: pd.DataFrame):
-    """
-    Display a bubble map of the top risk factors 
-    across the country.
-    """
-
-    fig = px.choropleth(map_data,
-                        locations='STUSPS',
-                        locationmode="USA-states",
-                        scope="usa",
-                        color='stroke_mortality_rate',
-                        color_continuous_scale="Viridis_r",
-                        hover_data=['State', 'stroke_mortality_rate'],
-                        labels={'stroke_mortality_rate': 'Stroke Mortality Rate', 'STUSPS': 'State ID'}
-                        )
-    
-    fig.update_layout(
-            title={
-                "text": "Stroke Mortality and Hypertension by State",
-                "y":0.98,
-                "x":0.5,
-                "xanchor": "center",
-                "yanchor": "top"
-            },
-        title_font_family="Times New Roman",
-        title_font_size=26,
-        title_font_color="black",
-        title_x=.45
-    )
-
-    # fig = px.scatter_geo(map_data, locations="STUSPS", color="Percent_with_hypertension",
-    #                      hover_name="Percent_with_hypertension", size="Percent_with_hypertension",
-    #                      projection="usa")
-
-    fig.show()
-'''
-
-
 def main():
     risk_factor_data = datacleanup.create_risk_factor_df("datasets/stroke_data_1.csv")
-    map_data = datacleanup.create_shapefile_for_bubble_map(
-        "datasets/tl_2017_us_state/tl_2017_us_state.shp",
-        "datasets/hypertension_by_state.xlsx",
-        "datasets/Obesity_by_state.csv",
-        "datasets/Diabetes_by_state.csv",
-        "datasets/State_code_to_name.csv",
-        "datasets/stroke_mortality_state.csv",
-    )
-    # print("\n================================")
-    # print(map_data.columns)
-    # print("\n================================")
-
-    # us_map = gpd.read_file("datasets/tl_2017_us_state/tl_2017_us_state.shp")
-    # print(us_map.columns)
-    # hypertension = pd.read_excel("datasets/hypertension_by_state.xlsx", engine='openpyxl')
-    # print("\n================================")
-
+    print("Data Summary")
     # data summary
     df = pd.read_csv("datasets/stroke_data_1.csv")
     print(df.columns)
@@ -427,14 +373,8 @@ def main():
     # visualization_correlation_matrix(df)
     # pair_visualization(df)
     normalized_risk_factor = normalize_data(risk_factor_data)
-
     correlations = find_correlations(normalized_risk_factor)
     print(sorted_correlations(correlations))
-    # print(find_risk_factor_correlation(risk_factor_data))
-    comparison_bar_charts(normalized_risk_factor)
-
-    # map_risk_factors(map_data)
-    # print("\n================================")
 
 
 if __name__ == "__main__":
