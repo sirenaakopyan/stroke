@@ -145,7 +145,7 @@ def create_shapefile_for_bubble_map(
     obesity_state = pd.read_csv(obesity)
     obesity_state = obesity_state[obesity_state["State"] != "Virgin Islands"]
     obesity_state = obesity_state[["State", "Prevalence"]]
-    obesity_state = obesity_state.rename(columns={"Prevalence": 
+    obesity_state = obesity_state.rename(columns={"Prevalence":
                                                   "Obesity_prev_perc"})
 
     # high-glucose (Diabetes by state)
@@ -157,7 +157,7 @@ def create_shapefile_for_bubble_map(
     diabetes_state = state_abbr.merge(
         raw_diabetes_state, left_on="code", right_on="state_abbr", how="outer"
     )
-    diabetes_state = diabetes_state[diabetes_state["state"] 
+    diabetes_state = diabetes_state[diabetes_state["state"]
                                     != "Virgin Islands"]
     diabetes_state = diabetes_state[["state", "value"]]
     diabetes_state = diabetes_state.rename(
