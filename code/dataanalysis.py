@@ -14,10 +14,11 @@ import operator
 
 def data_set_exploration(df: pd.DataFrame, dir: str):
     """
-    This function takes a Pandas dataframe and a directory path as input and prints
-    the shape of the dataframe, columns name, and value count of the stroke column.
-    It then calls the plot_missing_data and plot_stroke_proportion functions to
-    plot and save the graphs in the specified directory.
+    This function takes a Pandas dataframe and a directory path as input and
+    prints the shape of the dataframe, columns name, and value count of the
+    stroke column.It then calls the plot_missing_data and
+    plot_stroke_proportion functions to plot and save the graphs in the
+    specified directory.
     """
 
     print("Data Shape: ", df.shape)
@@ -31,9 +32,9 @@ def data_set_exploration(df: pd.DataFrame, dir: str):
 
 def plot_stroke_proportion(df, dir: str):
     """
-    This function takes a Pandas dataframe and a directory path as input and plots
-    the proportion of stroke samples in the dataset. It saves the plot in the
-    specified directory.
+    This function takes a Pandas dataframe and a directory path as input and
+    plots the proportion of stroke samples in the dataset. It saves the plot
+    in the specified directory.
     """
 
     plt.pie(
@@ -48,9 +49,9 @@ def plot_stroke_proportion(df, dir: str):
 
 def plot_missing_data(df, dir: str):
     """
-    This function takes a Pandas dataframe and a directory path as input and plots
-    the number of missing values in each column of the dataset using a heatmap. It
-    saves the plot in the specified directory.
+    This function takes a Pandas dataframe and a directory path as input and
+    plots the number of missing values in each column of the dataset using a
+    heatmap. It saves the plot in the specified directory.
     """
 
     plt.title("Missing Value Status", fontweight="bold")
@@ -63,7 +64,7 @@ def plot_missing_data(df, dir: str):
 def plot_relating_cate(df, dir, cate1, cate2):
     stroke = df[df["stroke"] == 1]
     no_stroke = df[df["stroke"] == 0]
-    fig, [ax1, ax2] = plt.subplots(1, 2, figsize=(8, 8))  # set figure size to (8, 10)
+    fig, [ax1, ax2] = plt.subplots(1, 2, figsize=(8, 8))
     plt.subplots_adjust(hspace=0.4)  # add vertical spacing between subplots
     sns.scatterplot(data=stroke, x=cate1, y=cate2, ax=ax1)
     sns.scatterplot(data=no_stroke, x=cate1, y=cate2, ax=ax2)
@@ -75,13 +76,16 @@ def plot_relating_cate(df, dir, cate1, cate2):
 
 def plot_historgram_with_cate(df, dir, cate):
     """
-    Method to plot a histogram based on a categorical feature with strokes as the target variable
+    Method to plot a histogram based on a categorical feature with strokes as
+    the target variable
     """
     sns.kdeplot(
-        data=df[df["stroke"] == 0], x=cate, shade=True, alpha=1, label="No Stroke"
+        data=df[df["stroke"] == 0], x=cate, shade=True, alpha=1,
+        label="No Stroke"
     )
     sns.kdeplot(
-        data=df[df["stroke"] == 1], x=cate, shade=True, alpha=0.8, label="Stroke"
+        data=df[df["stroke"] == 1], x=cate, shade=True, alpha=0.8,
+        label="Stroke"
     )
     plt.legend()
     plt.savefig("" + dir + "/" + cate + "strokeHistorgram.png", bbox="tight")
@@ -169,10 +173,12 @@ def plot_correlation(df, dir: str):
         "Smoking Status",
     ]
     ax.set_yticklabels(
-        yticks, {"font": "serif", "size": 10, "weight": "bold"}, rotation=0, alpha=0.9
+        yticks, {"font": "serif", "size": 10, "weight": "bold"}, rotation=0,
+        alpha=0.9
     )
     ax.set_xticklabels(
-        xticks, {"font": "serif", "size": 10, "weight": "bold"}, rotation=90, alpha=0.9
+        xticks, {"font": "serif", "size": 10, "weight": "bold"}, rotation=90,
+        alpha=0.9
     )
     plt.savefig(dir + "/CorrelationMatrix.png", bbox_inches="tight")
     plt.clf()
@@ -223,7 +229,8 @@ def sorted_correlations(corr_dict: Dict[str, float]) -> Dict[str, float]:
     Sort the correlation coefficients in descending order.
     Return the sorted correlation coefficients.
     """
-    sorted_d = dict(sorted(corr_dict.items(), key=operator.itemgetter(1), reverse=True))
+    sorted_d = dict(sorted(corr_dict.items(), key=operator.itemgetter(1),
+                           reverse=True))
     return sorted_d
 
 
@@ -256,7 +263,8 @@ def comparison_bar_charts(risk_factor_df: pd.DataFrame) -> None:
     )
     smoking_status_stroke.set_xticklabels(["No", "Yes"])
     smoking_status_stroke.set(xlabel="Had Stroke", ylabel="Count")
-    plt.legend(title="Smoking Status", labels=["Not a Smoker", "Smoker", "Unknown"])
+    plt.legend(title="Smoking Status", labels=["Not a Smoker", "Smoker",
+                                               "Unknown"])
     plt.title("Smoking Status and Stroke")
     plt.savefig("question1images/smoking_status.png", bbox_inches="tight")
     plt.show()
@@ -281,7 +289,8 @@ def comparison_bar_charts(risk_factor_df: pd.DataFrame) -> None:
     heart_disease_stroke.set_xticklabels(["No", "Yes"])
     heart_disease_stroke.set(xlabel="Had Stroke", ylabel="Count")
     plt.legend(
-        title="Status", labels=["did not have heart disease", "had heart disease"]
+        title="Status", labels=["did not have heart disease",
+                                "had heart disease"]
     )
     plt.title("Heart Disease and Stroke")
     plt.savefig("question1images/heart_disease.png", bbox_inches="tight")
@@ -294,7 +303,8 @@ def comparison_bar_charts(risk_factor_df: pd.DataFrame) -> None:
     )
     hypertension_and_stroke.set_xticklabels(["No", "Yes"])
     hypertension_and_stroke.set(xlabel="Had Stroke", ylabel="Count")
-    plt.legend(title="Status", labels=["did not have hypertension", "had hypertension"])
+    plt.legend(title="Status", labels=["did not have hypertension",
+                                       "had hypertension"])
     plt.title("Hypertension and Stroke")
     plt.savefig("question1images/hypertension.png", bbox_inches="tight")
     # plt.show()
@@ -364,7 +374,8 @@ def comparison_bar_charts(risk_factor_df: pd.DataFrame) -> None:
 
 
 def main():
-    risk_factor_data = datacleanup.create_risk_factor_df("datasets/stroke_data_1.csv")
+    d = datacleanup.create_risk_factor_df("datasets/stroke_data_1.csv")
+    risk_factor_data = d.copy()
     print("Data Summary")
     # data summary
     df = pd.read_csv("datasets/stroke_data_1.csv")
@@ -375,7 +386,8 @@ def main():
     plot_relating_cate(df, "question1Images", "age", "heart_disease")
 
     # Distribution for numerical value
-    for column in ["age", "hypertension", "heart_disease", "avg_glucose_level", "bmi"]:
+    for column in ["age", "hypertension", "heart_disease",
+                   "avg_glucose_level", "bmi"]:
         plot_historgram_with_cate(df, "dataSummary", column)
 
     # Question 1
