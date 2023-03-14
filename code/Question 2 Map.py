@@ -1,11 +1,11 @@
 """
 Question 2.
-Research Question: 
- 
-Is there a correlation between the prevalence of 
+Research Question:
+
+Is there a correlation between the prevalence of
 risk factors and stroke mortality rates across the United States?
 
-This code defines three functions that display bubble maps of hypertension, 
+This code defines three functions that display bubble maps of hypertension,
 obesity, and diabetes rates across the United States over a choropleth map
 colored by stroke mortality rates.
 """
@@ -13,8 +13,6 @@ import datacleanup
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-import matplotlib.pyplot as plt
-import plotly.subplots as sp
 
 
 def map_hypertension(map_data: pd.DataFrame):
@@ -38,7 +36,8 @@ def map_hypertension(map_data: pd.DataFrame):
 
     percent_with_hypertension = (
         hyp_map_data['Percent_with_hypertension']).round(2)
-    percent_with_hypertension = (hyp_map_data["Percent_with_hypertension"]).round(2)
+    percent_with_hypertension = (hyp_map_data
+                                 ["Percent_with_hypertension"]).round(2)
 
     fig.add_trace(
         go.Scattergeo(
@@ -224,7 +223,8 @@ def map_obesity(map_data: pd.DataFrame):
             orientation="h",
             title={
                 "text": "My Legend Title",
-                "font": {"family": "Times New Roman", "size": 18, "color": "red"},
+                "font": {"family": "Times New Roman", 
+                         "size": 18, "color": "red"},
             },
             font=dict(family="Courier", size=22, color="black"),
             traceorder="reversed",
@@ -262,7 +262,8 @@ def map_diabetes(map_data: pd.DataFrame):
 
     percent_with_diabetes = (
         di_map_data['Diabetes_prev_perc'] * 100).round(2)
-    percent_with_diabetes = (di_map_data["Diabetes_prev_perc"] * 100).round(2)
+    percent_with_diabetes = (di_map_data
+                             ["Diabetes_prev_perc"] * 100).round(2)
 
     fig.add_trace(
         go.Scattergeo(
@@ -340,9 +341,10 @@ def map_diabetes(map_data: pd.DataFrame):
             orientation="h",
             title={
                 "text": "My Legend Title",
-                "font": {"family": "Times New Roman", "size": 18, "color": "red"},
+                "font": {"family": "Times New Roman", 
+                         "size": 18, "color": "black"},
             },
-            font=dict(family="Courier", size=22, color="black"),
+            font=dict(family="Times New Roman", size=22, color="black"),
             traceorder="reversed",
         )
     )
