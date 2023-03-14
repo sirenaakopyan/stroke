@@ -4,8 +4,8 @@ Group Members: Khanh Bui, Keerthi Renduchintala, Sirena Akopyan
 ## Summary of  of research questions
 ### What are the 3 dominant factors that increase the likelihood of having a stroke?
 - We will investigate what factors have the highest correlation with stroke
-### Does having more than 1 risk factor impact how likely one is to have a stroke? ( Measure the rate)
-- We will investigate how the percentage of strokes for the combinations of risk factors change
+### Is there a correlation between the prevalence of risk factors and stroke mortality rates across the United States?
+- We will investigate how the percentage of risk factors compare to stroke mortality rates across the United States.
 ### Can we predict if someone is going to have a stroke given the presence of risk factors? 
 - We will investigate if we can build a machine learning model to predict if someone will have a stroke.
 
